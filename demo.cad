@@ -1,0 +1,95 @@
+{
+  {
+    material = 0,
+    type = "line",
+    startPos = {
+      1,
+      1,
+    },
+    endPos = {
+      10,
+      1,
+    },
+  },
+  {
+    material = 0,
+    type = "line",
+    startPos = {
+      1,
+      1,
+    },
+    endPos = {
+      1,
+      10,
+    },
+  },
+  {
+    material = 0,
+    type = "line",
+    startPos = {
+      10,
+      1,
+    },
+    endPos = {
+      10,
+      10,
+    },
+  },
+  {
+    material = 0,
+    type = "line",
+    startPos = {
+      1,
+      10,
+    },
+    endPos = {
+      10,
+      10,
+    },
+  },
+  {
+    material = 0,
+    type = "line",
+    startPos = {
+      10,
+      10,
+    },
+    endPos = {
+      31,
+      20,
+    },
+  },
+  {
+    material = 0,
+    type = "line",
+    startPos = {
+      31,
+      20,
+    },
+    endPos = {
+      40,
+      10,
+    },
+  },
+  {
+    material = 0,
+    type = "line",
+    startPos = {
+      50,
+      10,
+    },
+    endPos = {
+      40,
+      10,
+    },
+  },
+  {
+    material = 0,
+    type = "circle",
+    radius = 10,
+    pos = {
+      50,
+      20,
+    },
+  },
+}

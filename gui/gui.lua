@@ -1,19 +1,27 @@
 local gui = {}
 
 function gui:drawFrames()
----@diagnostic disable-next-line: undefined-field
-    for x = 1, table.getn(self.widgets) do
-        if self.widgets[x].enable then
-            self.widgets[x]:drawFrame()
+    for key, v in ipairs(self.widgets) do
+        if v.enable then
+            v:drawFrame()
+        end
+    end
+    for key, v in pairs(self.widgets) do
+        if v.enable then
+            v:drawFrame()
         end
     end
 end
 
 function gui:draw()
----@diagnostic disable-next-line: undefined-field
-    for x = 1, table.getn(self.widgets) do
-        if self.widgets[x].enable then
-            self.widgets[x]:draw()
+    for key, v in ipairs(self.widgets) do
+        if v.enable then
+            v:draw()
+        end
+    end
+    for key, v in pairs(self.widgets) do
+        if v.enable then
+            v:draw()
         end
     end
 end
@@ -56,12 +64,21 @@ function gui:read()
         elseif self:isXYonWidget(b,c, self.widgets[self.focusedWidget]) and self.widgets[self.focusedWidget].enable then
             if self.widgets[self.focusedWidget]:handleMouseClick(a,b,c,d) then eventn = self.focusedWidget end
         else
-            for x = 1, table.getn(self.widgets) do
-                if self:isXYonWidget(b,c, self.widgets[x]) and self.widgets[x].enable then
+            for key, v in ipairs(self.widgets) do
+                if self:isXYonWidget(b,c, v) and v.enable then
                     self.widgets[self.focusedWidget]:setFocus(false)
-                    self.focusedWidget = x
-                    self.widgets[x]:setFocus(true)
-                    if self.widgets[x]:handleMouseClick(a,b,c,d) then eventn = x end
+                    self.focusedWidget = key
+                    v:setFocus(true)
+                    if v:handleMouseClick(a,b,c,d) then eventn = key end
+                    break
+                end
+            end
+            for key, v in pairs(self.widgets) do
+                if self:isXYonWidget(b,c, v) and v.enable then
+                    self.widgets[self.focusedWidget]:setFocus(false)
+                    self.focusedWidget = key
+                    v:setFocus(true)
+                    if v:handleMouseClick(a,b,c,d) then eventn = key end
                     break
                 end
             end
@@ -69,16 +86,18 @@ function gui:read()
     elseif event == "key" then
         if a == 15 then
             -- tab
-            self.widgets[self.focusedWidget]:setFocus(false)
-            self.focusedWidget = self.focusedWidget + 1
-            if self.widgets[self.focusedWidget] and not self.widgets[self.focusedWidget].enable then self.focusedWidget = self.focusedWidget + 1 end
-            if self.focusedWidget > table.getn(self.widgets) then
-                self.focusedWidget = 1
-            end
-            self.widgets[self.focusedWidget]:setFocus(true)
+            -- self.widgets[self.focusedWidget]:setFocus(false)
+            -- self.focusedWidget = self.focusedWidget + 1
+            -- if self.widgets[self.focusedWidget] and not self.widgets[self.focusedWidget].enable then self.focusedWidget = self.focusedWidget + 1 end
+            -- if self.focusedWidget > #self.widgets then
+            --     self.focusedWidget = 1
+            -- end
+            -- self.widgets[self.focusedWidget]:setFocus(true)
         else
             if self.widgets[self.focusedWidget]:handleKey(a,b,c,d) then eventn = self.focusedWidget end
         end
+    elseif event == "mouse_scroll" then
+        if self.widgets[self.focusedWidget]:handleMouseScroll(a,b,c) then eventn = self.focusedWidget end
     elseif event == "char" then
         self.widgets[self.focusedWidget]:handleChar(a,b,c,d)
     elseif event == "mouse_drag" then
@@ -98,32 +117,46 @@ function gui:read()
             end
         end
     end
-    for x = 1, table.getn(self.widgets) do
-        values[x] = self.widgets[x].value
+    for key, v in ipairs(self.widgets) do
+        values[key] = v.value
+    end
+    for key, v in pairs(self.widgets) do
+        values[key] = v.value
     end
     return eventn, values, {event,a,b,c,d}
 end
 
-function gui:new(o, widgets, p)
+-- @param o original object, usually set to `nil`
+function gui:new(o, widgets, parameters)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
     self.widgets = widgets
-    o.focusedWidget = 1
     o:drawFrames()
-    o.widgets[1]:setFocus(true)
+    local widgetKey = 1
+    for key, _ in pairs(o.widgets) do
+        widgetKey = key
+    end
+    for key, _ in ipairs(o.widgets) do
+        widgetKey = key
+    end
+    o.widgets[widgetKey]:setFocus(true)
+    o.focusedWidget = widgetKey
     o.completeRedraw = true
-    if p then
-        o.devMode = p.devMode or false
-        o.device = p.device or term
-        o.timeout = p.timeout or nil
+    if parameters then
+        o.devMode = parameters.devMode or false
+        o.device = parameters.device or term
+        o.timeout = parameters.timeout or nil
     else
         o.devMode = false
         o.device = term
         o.timeout = nil
     end
-    for x = 1, table.getn(o.widgets) do
-        o.widgets[x].device = o.device
+    for key, v in ipairs(o.widgets) do
+        v.device = o.device
+    end
+    for key, v in pairs(o.widgets) do
+        v.device = o.device
     end
     return o
 end

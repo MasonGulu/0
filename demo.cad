@@ -92,4 +92,48 @@
       20,
     },
   },
+  {
+    material = 0,
+    type = "line",
+    startPos = {
+      10,
+      10,
+    },
+    endPos = {
+      50,
+      20,
+    },
+  },
+  {
+    endPos = {
+      30,
+      5,
+    },
+    material = 0,
+    weight1Pos = {
+      30,
+      10,
+    },
+    startPos = {
+      10,
+      10,
+    },
+    type = "quadratic",
+  },
+  {
+    endPos = {
+      65,
+      15,
+    },
+    material = 3,
+    weight1Pos = {
+      50,
+      5,
+    },
+    startPos = {
+      30,
+      5,
+    },
+    type = "quadratic",
+  },
 }

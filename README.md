@@ -35,3 +35,10 @@ In this snippet `events` contains either a `number` or `nil`, if it contains a n
 * canvasDemo.lua - a simple program that shows the capabilities of the canvas widget.
 * helloworld.lua - the sample program shown in the quickstart section.
 * cad.lua - [ADVANCED!] a 'cli' CAD interface that uses the textinput widget (swapping numOnly on the fly!), printoutput widget, and cadExtension for the canvas widget.
+
+## Unrelated information
+
+* docedit.lua - a 15 color document editor, saves files in a special format. Allows for color printing with a very specific computer setup, (There are pictures of it)
+* printing/printerController.lua - the main executable that each printer computer runs, uploaded from a host computer on boot.
+* printing/printerManager.lua - the control script for a main host printing computer.
+* printing/printerStartup.lua - put in each printer as startup.lua

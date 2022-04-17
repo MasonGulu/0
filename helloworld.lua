@@ -2,7 +2,7 @@ local gui = require("gui/gui") -- required
 local text = require("gui/text")
 local button = require("gui/button")
 
-local win = gui:new(nil, {text:new(nil, {1,1}, {14,3}, "Hello World!"), button:new(nil, {1,3}, {13,3}, "Quit!")}, {timeout=0.10})
+local win = gui:new(nil, {text:new(nil, {1,1}, {14,3}, "Hello World!"), button:new(nil, {1,3}, {14,3}, "Quit!")}, {timeout=0.10,devMode=true})
 
 while true do
     local events, values = win:read()

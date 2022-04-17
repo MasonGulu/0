@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>CCSimpleGUI</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>CCSimpleGUI</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="nowrap">
+  <li><a href="../examples/cad.lua.html">cad.lua</a></li>
+  <li><strong>canvasDemo.lua</strong></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/box.html">box</a></li>
+  <li><a href="../modules/button.html">button</a></li>
+  <li><a href="../modules/canvas.html">canvas</a></li>
+  <li><a href="../modules/checkbox.html">checkbox</a></li>
+  <li><a href="../modules/widget.html">widget</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>canvasDemo.lua</h2>
+<pre>
+<span class="keyword">local</span> gui = <span class="global">require</span>(<span class="string">"gui/gui"</span>)
+<span class="keyword">local</span> canvas = <span class="global">require</span>(<span class="string">"gui/canvas"</span>)
+<span class="keyword">local</span> button = <span class="global">require</span>(<span class="string">"gui/button"</span>)
+<span class="keyword">local</span> printoutput = <span class="global">require</span>(<span class="string">"gui/printoutput"</span>)
+<span class="keyword">local</span> checkbox = <span class="global">require</span>(<span class="string">"gui/checkbox"</span>)
+
+<span class="keyword">local</span> termsize = {term.getSize()}
+<span class="keyword">local</span> win = gui:new(<span class="keyword">nil</span>, {canvas:new(<span class="keyword">nil</span>, {<span class="number">1</span>,<span class="number">1</span>}, {termsize[<span class="number">1</span>]-<span class="number">9</span>, termsize[<span class="number">2</span>]-<span class="number">4</span>}),
+                          printoutput:new(<span class="keyword">nil</span>, {termsize[<span class="number">1</span>]-<span class="number">9</span>, <span class="number">1</span>}, {<span class="number">10</span>, termsize[<span class="number">2</span>]-<span class="number">6</span>}),
+                          checkbox:new(<span class="keyword">nil</span>, {termsize[<span class="number">1</span>]-<span class="number">9</span>,termsize[<span class="number">2</span>]-<span class="number">6</span>}, {<span class="number">10</span>, <span class="number">3</span>}, <span class="string">"Timeout"</span>),
+                          button:new(<span class="keyword">nil</span>, {<span class="number">1</span>,termsize[<span class="number">2</span>]-<span class="number">4</span>}, {termsize[<span class="number">1</span>], <span class="number">3</span>}, <span class="string">"Next"</span>),
+                          button:new(<span class="keyword">nil</span>, {<span class="number">1</span>,termsize[<span class="number">2</span>]-<span class="number">2</span>}, {termsize[<span class="number">1</span>], <span class="number">3</span>}, <span class="string">"Quit"</span>)}, {devMode=<span class="keyword">false</span>, timeout=<span class="number">0.05</span>})
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="global">print</span>(a)
+    win.widgets[<span class="number">2</span>]:<span class="global">print</span>(a)
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> canvasraw = win.widgets[<span class="number">1</span>].canvas
+<span class="keyword">local</span> res = canvasraw.resolution
+<span class="keyword">local</span> mode = <span class="number">0</span>
+<span class="keyword">local</span> <span class="keyword">function</span> randomVector()
+    <span class="keyword">return</span> {<span class="global">math</span>.random(res[<span class="number">1</span>]), <span class="global">math</span>.random(res[<span class="number">2</span>])}
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> modeDescriptions = {<span class="string">"Random bezier curves."</span>,
+                          <span class="string">"Colored random bezier curves."</span>,
+                          <span class="string">"Random pixel states with position dependent color."</span>,
+                          <span class="string">"Random colored circles"</span>}
+
+<span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+    <span class="keyword">local</span> events, values = win:read()
+    <span class="keyword">if</span> values[<span class="number">3</span>] <span class="keyword">then</span>
+        win.timeout = <span class="number">0.05</span>
+    <span class="keyword">else</span>
+        win.timeout = <span class="keyword">false</span>
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> events == <span class="number">4</span> <span class="keyword">then</span>
+        mode = (mode + <span class="number">1</span>) % <span class="number">4</span>
+        <span class="global">print</span>(modeDescriptions[mode+<span class="number">1</span>])
+        win.widgets[<span class="number">1</span>].canvas:clear()
+    <span class="keyword">elseif</span> events == <span class="number">5</span> <span class="keyword">then</span>
+        term.setBackgroundColor(colors.black)
+        term.setTextColor(colors.white)
+        term.setCursorPos(<span class="number">1</span>,<span class="number">1</span>)
+        term.clear()
+        <span class="keyword">break</span>
+    <span class="keyword">end</span>
+
+    <span class="keyword">if</span> mode == <span class="number">0</span> <span class="keyword">then</span>
+        win.widgets[<span class="number">1</span>].canvas:clear()
+        canvasraw:drawBezier(randomVector(),randomVector(),randomVector(),randomVector(),<span class="number">0.01</span>)
+    <span class="keyword">elseif</span> mode == <span class="number">1</span> <span class="keyword">then</span>
+        win.widgets[<span class="number">1</span>].canvas:clear(<span class="keyword">true</span>)
+        canvasraw:drawBezier(randomVector(),randomVector(),randomVector(),randomVector(),<span class="number">0.01</span>,<span class="global">math</span>.random(<span class="number">15</span>))
+    <span class="keyword">elseif</span> mode == <span class="number">2</span> <span class="keyword">then</span>
+        win.widgets[<span class="number">1</span>].canvas:clear()
+        <span class="keyword">for</span> x = <span class="number">1</span>, res[<span class="number">1</span>] <span class="keyword">do</span>
+            <span class="keyword">for</span> y = <span class="number">1</span>, res[<span class="number">2</span>] <span class="keyword">do</span>
+                win.widgets[<span class="number">1</span>]:setPixel(x,y, <span class="global">math</span>.random() &lt; <span class="number">0.5</span>, <span class="global">math</span>.floor(x/<span class="number">2</span> % <span class="number">16</span>), <span class="global">math</span>.floor(y/<span class="number">3</span> % <span class="number">15</span>))
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">elseif</span> mode == <span class="number">3</span> <span class="keyword">then</span>
+        win.widgets[<span class="number">1</span>].canvas:clear()
+        <span class="keyword">for</span> i = <span class="number">1</span>, <span class="number">20</span> <span class="keyword">do</span>
+            canvasraw:drawCircle({<span class="global">math</span>.random(res[<span class="number">1</span>]), <span class="global">math</span>.random(res[<span class="number">2</span>])}, <span class="global">math</span>.random(<span class="number">5</span>,<span class="number">10</span>), <span class="number">0.01</span>, <span class="global">math</span>.random(<span class="number">15</span>))
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span></pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-02-27 16:41:56 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

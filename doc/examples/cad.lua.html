@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>CCSimpleGUI</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>CCSimpleGUI</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="nowrap">
+  <li><strong>cad.lua</strong></li>
+  <li><a href="../examples/canvasDemo.lua.html">canvasDemo.lua</a></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/box.html">box</a></li>
+  <li><a href="../modules/button.html">button</a></li>
+  <li><a href="../modules/canvas.html">canvas</a></li>
+  <li><a href="../modules/checkbox.html">checkbox</a></li>
+  <li><a href="../modules/widget.html">widget</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>cad.lua</h2>
+<pre>
+<span class="keyword">local</span> gui = <span class="global">require</span>(<span class="string">"gui/gui"</span>)
+<span class="keyword">local</span> canvas = <span class="global">require</span>(<span class="string">"gui/canvas"</span>)
+<span class="keyword">local</span> textinput = <span class="global">require</span>(<span class="string">"gui/textinput"</span>)
+<span class="keyword">local</span> printoutput = <span class="global">require</span>(<span class="string">"gui/printoutput"</span>)
+<span class="keyword">local</span> cadLib = <span class="global">require</span>(<span class="string">"gui/cadExtension"</span>)
+
+<span class="keyword">local</span> screensize = {term.getSize()}
+
+<span class="keyword">local</span> layout = {canvas:new(<span class="keyword">nil</span>, {<span class="number">1</span>,<span class="number">1</span>}, {screensize[<span class="number">1</span>], screensize[<span class="number">2</span>]-<span class="number">6</span>}), printoutput:new(<span class="keyword">nil</span>, {<span class="number">1</span>,screensize[<span class="number">2</span>]-<span class="number">6</span>}, {screensize[<span class="number">1</span>], <span class="number">5</span>}), textinput:new(<span class="keyword">nil</span>, {<span class="number">1</span>, screensize[<span class="number">2</span>]-<span class="number">2</span>}, {screensize[<span class="number">1</span>], <span class="number">3</span>})}
+<span class="keyword">local</span> win = gui:new(<span class="keyword">nil</span>, layout)
+
+<span class="keyword">local</span> canvasWidget = win.widgets[<span class="number">1</span>]
+<span class="comment">-- leftx, topy, rightx, bottomy
+</span><span class="keyword">local</span> iterationSize = <span class="number">0.1</span>
+<span class="keyword">local</span> selectedMaterial = <span class="number">0</span>
+
+
+
+<span class="keyword">local</span> <span class="keyword">function</span> <span class="global">print</span>(a)
+    win.widgets[<span class="number">2</span>]:<span class="global">print</span>(a)
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> setPrintOutputView(doPrintOutputView)
+    <span class="keyword">if</span> doPrintOutputView <span class="keyword">then</span>
+        canvasWidget.enable = <span class="keyword">false</span>
+        win.widgets[<span class="number">2</span>]:updatePos(<span class="number">1</span>,<span class="number">1</span>)
+        win.widgets[<span class="number">2</span>]:updateSize(screensize[<span class="number">1</span>], screensize[<span class="number">2</span>]-<span class="number">2</span>)
+    <span class="keyword">else</span>
+        canvasWidget.enable = <span class="keyword">true</span>
+        win.widgets[<span class="number">2</span>]:updatePos(<span class="number">1</span>,screensize[<span class="number">2</span>]-<span class="number">6</span>)
+        win.widgets[<span class="number">2</span>]:updateSize(screensize[<span class="number">1</span>], <span class="number">5</span>)
+    <span class="keyword">end</span>
+    win:drawFrames()
+    win:draw()
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> getNextTextInputEvent()
+    <span class="keyword">local</span> events, values
+    <span class="keyword">repeat</span>
+        events, values = win:read()
+    <span class="keyword">until</span> events == <span class="number">3</span>
+    <span class="keyword">local</span> value = values[<span class="number">3</span>]
+    win.widgets[<span class="number">3</span>].value = <span class="string">""</span>
+    <span class="keyword">if</span> win.widgets[<span class="number">3</span>].numOnly <span class="keyword">then</span>
+        <span class="keyword">return</span> <span class="global">tonumber</span>(value)
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> value
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> setNumOnly(state)
+    win.widgets[<span class="number">3</span>].numOnly = state
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> <span class="keyword">function</span> getNTextInputs(n, strings)
+    <span class="keyword">local</span> inputs = {}
+    <span class="keyword">for</span> x = <span class="number">1</span>, n <span class="keyword">do</span>
+        <span class="global">print</span>(strings[x])
+        inputs[x] = getNextTextInputEvent()
+        <span class="keyword">if</span> <span class="keyword">not</span> inputs[x] <span class="keyword">or</span> inputs[x] == <span class="string">""</span> <span class="keyword">then</span>
+            <span class="global">print</span>(<span class="string">"Cancelled"</span>)
+            <span class="keyword">return</span> <span class="keyword">false</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+    <span class="keyword">return</span> inputs
+<span class="keyword">end</span>
+
+<span class="keyword">local</span> redraw = <span class="keyword">true</span>
+<span class="keyword">local</span> cad = cadLib:new(<span class="keyword">nil</span>, canvasWidget)
+
+<span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+    <span class="keyword">local</span> events, values = win:read()
+    <span class="keyword">if</span> redraw <span class="keyword">then</span>
+        cad:draw(iterationSize)
+        redraw = <span class="keyword">false</span>
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> events == <span class="number">3</span> <span class="keyword">then</span>
+        <span class="comment">-- Enter pressed
+</span>        <span class="keyword">local</span> input = values[<span class="number">3</span>]
+        win.widgets[<span class="number">3</span>].value = <span class="string">""</span>
+
+        <span class="comment">-- Views
+</span>        <span class="keyword">if</span> input == <span class="string">"printview"</span> <span class="keyword">then</span> setPrintOutputView(<span class="keyword">true</span>)
+        <span class="keyword">elseif</span> input == <span class="string">"canvasview"</span> <span class="keyword">then</span>
+            setPrintOutputView(<span class="keyword">false</span>)
+            redraw = <span class="keyword">true</span>
+
+
+        <span class="comment">-- Shape drawing
+</span>        <span class="keyword">elseif</span> input == <span class="string">"line"</span> <span class="keyword">then</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">4</span>, {<span class="string">"X1"</span>,<span class="string">"Y1"</span>,<span class="string">"X2"</span>,<span class="string">"Y2"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                cad:newElement(cad.line:new({inputs[<span class="number">1</span>], inputs[<span class="number">2</span>]}, {inputs[<span class="number">3</span>], inputs[<span class="number">4</span>]}, selectedMaterial))
+                redraw = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"circle"</span> <span class="keyword">then</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">3</span>, {<span class="string">"X"</span>,<span class="string">"Y"</span>,<span class="string">"Radius"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                cad:newElement(cad.circle:new({inputs[<span class="number">1</span>],inputs[<span class="number">2</span>]},inputs[<span class="number">3</span>],selectedMaterial))
+                redraw = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"rect"</span> <span class="keyword">then</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">4</span>, {<span class="string">"X"</span>,<span class="string">"Y"</span>,<span class="string">"Width"</span>,<span class="string">"Height"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                setNumOnly(<span class="keyword">false</span>)
+                <span class="global">print</span>(<span class="string">"Filled? [y] or n"</span>)
+                <span class="keyword">local</span> fill = getNextTextInputEvent()
+                <span class="keyword">if</span> fill == <span class="string">"n"</span> <span class="keyword">then</span>
+                    cad:newElement(cad.rect:new(inputs[<span class="number">1</span>], inputs[<span class="number">2</span>], inputs[<span class="number">3</span>], inputs[<span class="number">4</span>], <span class="keyword">false</span>, selectedMaterial))
+                <span class="keyword">else</span>
+                    cad:newElement(cad.rect:new(inputs[<span class="number">1</span>], inputs[<span class="number">2</span>], inputs[<span class="number">3</span>], inputs[<span class="number">4</span>], <span class="keyword">true</span>, selectedMaterial))
+                <span class="keyword">end</span>
+                redraw = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"quadratic"</span> <span class="keyword">then</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">6</span>, {<span class="string">"X1"</span>, <span class="string">"Y1"</span>, <span class="string">"X2"</span>, <span class="string">"Y2"</span>, <span class="string">"X3"</span>, <span class="string">"Y3"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                cad:newElement(cad.quadratic:new({inputs[<span class="number">1</span>], inputs[<span class="number">2</span>]}, {inputs[<span class="number">3</span>], inputs[<span class="number">4</span>]}, {inputs[<span class="number">5</span>], inputs[<span class="number">6</span>]}, selectedMaterial))
+                redraw = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"bezier"</span> <span class="keyword">then</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">8</span>, {<span class="string">"X1"</span>, <span class="string">"Y1"</span>, <span class="string">"X2"</span>, <span class="string">"Y2"</span>, <span class="string">"X3"</span>, <span class="string">"Y3"</span>, <span class="string">"X4"</span>, <span class="string">"Y4"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                cad:newElement(cad.bezier:new({inputs[<span class="number">1</span>], inputs[<span class="number">2</span>]}, {inputs[<span class="number">3</span>], inputs[<span class="number">4</span>]}, {inputs[<span class="number">5</span>], inputs[<span class="number">6</span>]}, {inputs[<span class="number">7</span>], inputs[<span class="number">8</span>]}, selectedMaterial))
+                redraw = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"undo"</span> <span class="keyword">then</span>
+            cad:undo()
+            redraw = <span class="keyword">true</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"setiterationsize"</span> <span class="keyword">then</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">1</span>, {<span class="string">"Iterationsize"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                iterationSize = inputs[<span class="number">1</span>]
+                redraw = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"setmaterial"</span> <span class="keyword">then</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="global">print</span>(<span class="string">"Enter a material number (0-14)"</span>)
+            selectedMaterial = getNextTextInputEvent()
+            <span class="keyword">if</span> (<span class="keyword">not</span> selectedMaterial) <span class="keyword">or</span> selectedMaterial &lt; <span class="number">0</span> <span class="keyword">or</span> selectedMaterial &gt; <span class="number">14</span> <span class="keyword">then</span>
+                <span class="global">print</span>(<span class="string">"Invalid material, reverting to 0"</span>)
+                selectedMaterial = <span class="number">0</span>
+            <span class="keyword">end</span>
+
+
+        <span class="comment">-- Grid stuff
+</span>        <span class="keyword">elseif</span> input == <span class="string">"togglegrid"</span> <span class="keyword">then</span>
+            cad.grid.enabled = <span class="keyword">not</span> cad.grid.enabled
+            <span class="global">print</span>(cad.grid.enabled)
+            redraw = <span class="keyword">true</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"grid"</span> <span class="keyword">then</span>
+            <span class="global">print</span>(<span class="string">"Grid size "</span>..cad.grid.size[<span class="number">1</span>]..<span class="string">" "</span>..cad.grid.size[<span class="number">2</span>])
+            <span class="global">print</span>(<span class="string">"Grid offset "</span>..cad.grid.offset[<span class="number">1</span>]..<span class="string">" "</span>..cad.grid.offset[<span class="number">2</span>])
+
+        <span class="keyword">elseif</span> input == <span class="string">"setgrid"</span> <span class="keyword">then</span>
+            cad.grid.enabled = <span class="keyword">true</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">4</span>, {<span class="string">"Grid X Size"</span>, <span class="string">"Grid Y Size"</span>, <span class="string">"Grid X Offset"</span>, <span class="string">"Grid Y Offset"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                cad.grid.size = {inputs[<span class="number">1</span>], inputs[<span class="number">2</span>]}
+                cad.grid.offset = {inputs[<span class="number">3</span>], inputs[<span class="number">4</span>]}
+            <span class="keyword">end</span>
+            redraw = <span class="keyword">true</span>
+
+        <span class="comment">-- Viewport stuff
+</span>        <span class="keyword">elseif</span> input == <span class="string">"setviewport"</span> <span class="keyword">then</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="keyword">local</span> newviewport = getNTextInputs(<span class="number">4</span>, {<span class="string">"Left"</span>,<span class="string">"Top"</span>,<span class="string">"Right"</span>,<span class="string">"Bottom"</span>})
+            <span class="keyword">if</span> newviewport <span class="keyword">then</span>
+                cad:setViewport(newviewport)
+                redraw = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"setviewportauto"</span> <span class="keyword">then</span>
+            setNumOnly(<span class="keyword">true</span>)
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">3</span>, {<span class="string">"X"</span>,<span class="string">"Y"</span>,<span class="string">"Scale"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                inputs[<span class="number">5</span>] = inputs[<span class="number">3</span>]
+                inputs[<span class="number">3</span>] = inputs[<span class="number">1</span>]+(canvasWidget.canvas.resolution[<span class="number">1</span>]/inputs[<span class="number">5</span>])
+                inputs[<span class="number">4</span>] = inputs[<span class="number">2</span>]+(canvasWidget.canvas.resolution[<span class="number">2</span>]/inputs[<span class="number">5</span>])
+                cad:setViewport(inputs)
+                redraw = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"resetviewport"</span> <span class="keyword">then</span>
+            cad:setViewport({<span class="number">1</span>,<span class="number">1</span>,cad.resolution[<span class="number">1</span>]+<span class="number">1</span>,cad.resolution[<span class="number">2</span>]+<span class="number">1</span>})
+            redraw = <span class="keyword">true</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"viewport"</span> <span class="keyword">then</span>
+            <span class="global">print</span>(<span class="string">"Viewport Point 1: "</span>..cad.viewport[<span class="number">1</span>]..<span class="string">" "</span>..cad.viewport[<span class="number">2</span>])
+            <span class="global">print</span>(<span class="string">"Viewport Point 2: "</span>..cad.viewport[<span class="number">3</span>]..<span class="string">" "</span>..cad.viewport[<span class="number">4</span>])
+            <span class="global">print</span>(<span class="string">"Pixel/Unit ratio: "</span>..cad.ratio[<span class="number">1</span>]..<span class="string">" "</span>..cad.ratio[<span class="number">2</span>]) <span class="comment">-- TODO
+</span>
+
+        <span class="comment">-- Other
+</span>        <span class="keyword">elseif</span> input == <span class="string">"quit"</span> <span class="keyword">then</span>
+            <span class="global">print</span>(<span class="string">"Type yes to quit."</span>)
+            <span class="keyword">local</span> option = getNextTextInputEvent()
+            <span class="keyword">if</span> option == <span class="string">"yes"</span> <span class="keyword">then</span>
+                term.clear()
+                term.setCursorPos(<span class="number">1</span>,<span class="number">1</span>)
+                <span class="keyword">break</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"redraw"</span> <span class="keyword">then</span>
+            redraw = <span class="keyword">true</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"help"</span> <span class="keyword">then</span>
+            setPrintOutputView(<span class="keyword">true</span>)
+            <span class="global">print</span>(<span class="string">"--- HELP ---"</span>)
+            <span class="global">print</span>(<span class="string">"printview canvasview"</span>)
+            <span class="global">print</span>(<span class="string">"line circle rect"</span>)
+            <span class="global">print</span>(<span class="string">"quadratic bezier"</span>)
+            <span class="global">print</span>(<span class="string">"undo setiterationsize"</span>)
+            <span class="global">print</span>(<span class="string">"setmaterial setviewport"</span>)
+            <span class="global">print</span>(<span class="string">"resetviewport viewport"</span>)
+            <span class="global">print</span>(<span class="string">"setviewportauto"</span>)
+            <span class="global">print</span>(<span class="string">"togglegrid grid setgrid"</span>)
+            <span class="global">print</span>(<span class="string">"save load"</span>)
+            <span class="global">print</span>(<span class="string">"quit redraw"</span>)
+
+        <span class="keyword">elseif</span> input == <span class="string">"save"</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">1</span>, {<span class="string">"Filename"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                <span class="keyword">local</span> file = <span class="global">io</span>.open(inputs[<span class="number">1</span>], <span class="string">"w"</span>)
+                <span class="keyword">local</span> stringtosave = <span class="string">""</span>
+                stringtosave = textutils.serialize(cad.elements)
+                file:write(stringtosave)
+                file:close()
+            <span class="keyword">end</span>
+
+        <span class="keyword">elseif</span> input == <span class="string">"load"</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> inputs = getNTextInputs(<span class="number">1</span>, {<span class="string">"Filename"</span>})
+            <span class="keyword">if</span> inputs <span class="keyword">then</span>
+                <span class="keyword">local</span> file = <span class="global">io</span>.open(inputs[<span class="number">1</span>], <span class="string">"r"</span>)
+                <span class="keyword">local</span> elementsTable = textutils.unserialize(file:read(<span class="string">"a"</span>))
+                cad.elements = {}
+                file:close()
+                <span class="keyword">for</span> x = <span class="number">1</span>, <span class="global">table</span>.getn(elementsTable) <span class="keyword">do</span>
+                    cad:newElement(cad[elementsTable[x].<span class="global">type</span>]:<span class="global">load</span>(elementsTable[x]))
+                <span class="keyword">end</span>
+                redraw = <span class="keyword">true</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">else</span>
+            <span class="global">print</span>(input..<span class="string">" not a command."</span>)
+        <span class="keyword">end</span>
+        setNumOnly(<span class="keyword">false</span>)
+    <span class="keyword">end</span>
+<span class="keyword">end</span></pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-02-27 16:41:56 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

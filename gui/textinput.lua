@@ -12,9 +12,10 @@ function textinput:draw()
 end
 
 function textinput:handleKey(keycode, held)
-    if keycode == 14 then
+    if keycode == keys.backspace then
+        -- backspace
         self.value = self.value:sub(1,-2)
-    elseif keycode == 28 then
+    elseif keycode == keys.enter then
         -- enter
         return true
     end

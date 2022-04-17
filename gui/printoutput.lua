@@ -14,7 +14,7 @@ function printoutput:draw()
 end
 
 function printoutput:scroll()
-    for x = table.getn(self.value)+1, 2, -1 do
+    for x = #self.value+1, 2, -1 do
         self.value[x] = self.value[x-1]
     end
     self.value[1] = ""

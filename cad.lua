@@ -90,7 +90,7 @@ while true do
             setNumOnly(true)
             local inputs = getNTextInputs(4, {"X1","Y1","X2","Y2"})
             if inputs then
-                cad:newElement(cad.line:new(inputs[1], inputs[2], inputs[3], inputs[4], selectedMaterial))
+                cad:newElement(cad.line:new({inputs[1], inputs[2]}, {inputs[3], inputs[4]}, selectedMaterial))
                 redraw = true
             end
 
@@ -98,7 +98,7 @@ while true do
             setNumOnly(true)
             local inputs = getNTextInputs(3, {"X","Y","Radius"})
             if inputs then
-                cad:newElement(cad.circle:new(inputs[1],inputs[2],inputs[3],selectedMaterial))
+                cad:newElement(cad.circle:new({inputs[1],inputs[2]},inputs[3],selectedMaterial))
                 redraw = true
             end
 
@@ -114,6 +114,22 @@ while true do
                 else
                     cad:newElement(cad.rect:new(inputs[1], inputs[2], inputs[3], inputs[4], true, selectedMaterial))
                 end
+                redraw = true
+            end
+
+        elseif input == "quadratic" then
+            setNumOnly(true)
+            local inputs = getNTextInputs(6, {"X1", "Y1", "X2", "Y2", "X3", "Y3"})
+            if inputs then
+                cad:newElement(cad.quadratic:new({inputs[1], inputs[2]}, {inputs[3], inputs[4]}, {inputs[5], inputs[6]}, selectedMaterial))
+                redraw = true
+            end
+
+        elseif input == "bezier" then
+            setNumOnly(true)
+            local inputs = getNTextInputs(8, {"X1", "Y1", "X2", "Y2", "X3", "Y3", "X4", "Y4"})
+            if inputs then
+                cad:newElement(cad.bezier:new({inputs[1], inputs[2]}, {inputs[3], inputs[4]}, {inputs[5], inputs[6]}, {inputs[7], inputs[8]}, selectedMaterial))
                 redraw = true
             end
 
@@ -207,12 +223,13 @@ while true do
             print("--- HELP ---")
             print("printview canvasview")
             print("line circle rect")
+            print("quadratic bezier")
             print("undo setiterationsize")
             print("setmaterial setviewport")
             print("resetviewport viewport")
             print("setviewportauto")
             print("togglegrid grid setgrid")
-            print("save load")
+            print("save load print")
             print("quit redraw")
 
         elseif input == "save" then
@@ -238,6 +255,42 @@ while true do
                 redraw = true
             end
 
+        elseif input == "print" then
+            local inputs = getNTextInputs(1, {"Printer side"})
+            if inputs then
+                local printer = peripheral.wrap(inputs[1])
+                if printer then
+                    if printer.getPaperLevel() < 1 then
+                        print("Printer is out of paper.")
+                    elseif printer.getInkLevel() < 1 then
+                        print("Printer is out of ink.")
+                    else
+                        -- printer is ready.
+                        local x, y = printer.getPageSize()
+                        function printer.blit(a)
+                            print(a)
+                            printer.write(a)
+                        end
+                        local tmpCanvas = canvas:new(nil, {0,0}, {x+1,y+1}, {device=printer})
+                        cad.canvasWidget = tmpCanvas
+                        setNumOnly(true)
+                        inputs = getNTextInputs(3, {"X", "Y", "Scale"})
+                        if inputs then
+                            inputs[5] = inputs[3]
+                            inputs[3] = inputs[1]+(tmpCanvas.canvas.resolution[1]/inputs[5])
+                            inputs[4] = inputs[2]+(tmpCanvas.canvas.resolution[2]/inputs[5])
+                            cad:setViewport(inputs)
+                            printer.newPage()
+                            cad:draw(iterationSize)
+                            tmpCanvas:draw()
+                            printer.endPage()
+                        end
+                        cad.canvasWidget = canvasWidget
+                    end
+                else
+                    print("Printer not found.")
+                end
+            end
         else
             print(input.." not a command.")
         end

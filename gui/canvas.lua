@@ -1,3 +1,8 @@
+--- A widget that provides an emulated bitmap section of the screen.
+-- Inherits from the widget object.
+-- @see widget
+-- @module canvas
+
 local widget = require("gui/widget")
 local canvas = require("gui/canvasraw")
 local canvaselement = widget:new(nil, {1,1}, {1,1})
@@ -12,6 +17,10 @@ end
 
 function canvaselement:updateSize(width, height)
     return -- Intentionally do not update the size, it's unsupported
+end
+
+function canvaselement:clear()
+    self.canvas:clear()
 end
 
 function canvaselement:updatePos(x,y)

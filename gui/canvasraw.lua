@@ -97,10 +97,57 @@ function canvasraw:setPixel(x,y,state,foreground,background)
     self.VRAM.P[x][y] = state
 end
 
-function canvasraw:clear()
+function canvasraw:getPointAlongLine(startPos, endPos, T)
+    return startPos[1] + (endPos[1] - startPos[1])*T, startPos[2] + (endPos[2] - startPos[2])*T
+end
+
+function canvasraw:drawLine(startPos, endPos, iterationSize, foreground, background)
+    for T = 0,1,iterationSize do
+        local x, y = self:getPointAlongLine(startPos, endPos, T)
+        self:setPixel(x, y, true, foreground, background)
+    end
+end
+
+function canvasraw:drawQuadratic(startPos, weight1Pos, endPos, iterationSize, foreground, background)
+    for T = 0,1,iterationSize do
+        local A = {self:getPointAlongLine(startPos, weight1Pos, T)}
+        local B = {self:getPointAlongLine(weight1Pos, endPos, T)}
+
+        local x, y = self:getPointAlongLine(A, B, T)
+        self:setPixel(x, y, true, foreground, background)
+    end
+end
+
+function canvasraw:drawBezier(startPos, weight1Pos, weight2Pos, endPos, iterationSize, foreground, background)
+    for T = 0,1,iterationSize do
+        local A = {self:getPointAlongLine(startPos, weight1Pos, T)}
+        local B = {self:getPointAlongLine(weight1Pos, weight2Pos, T)}
+        local C = {self:getPointAlongLine(weight2Pos, endPos, T)}
+
+        local x, y = self:getPointAlongLine({self:getPointAlongLine(A,B,T)}, {self:getPointAlongLine(B,C,T)}, T)
+        self:setPixel(x, y, true, foreground, background)
+    end
+end
+
+function canvasraw:drawCircle(pos, radius, iterationSize, foreground, background)
+    for T = 0, 2*math.pi, iterationSize do
+        local x = pos[1] + radius * math.cos(T)
+        local y = pos[2] + radius * math.sin(T)
+        self:setPixel(x, y, true, foreground, background)
+    end
+end
+
+function canvasraw:clear(doNotClearColor)
     for x = 1, self.resolution[1] do
         for y = 1, self.resolution[2] do
             self.VRAM.P[x][y] = false
+        end
+    end
+    if not doNotClearColor then
+        for x = 1, self.cResolution[1] do
+            for y = 1, self.cResolution[2] do
+                self.VRAM.C[x][y] = '0f'
+            end
         end
     end
 end

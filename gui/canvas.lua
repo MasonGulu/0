@@ -32,20 +32,13 @@ end
 
 function canvaselement:new(o, pos, size, p)
     o = o or {}
+    o = widget:new(o, pos, size, p)
     setmetatable(o, self)
     self.__index = self
-    o.pos = pos
-    o.size = size
-    o.focused = false
+    -- TODO implement this in all the prior widgets and stuff I made so they all call widget's new function first. so that widget can handle all the default/common parameters
     o.value = ""
-    if p then
-        o.enable_events = p.enable_events or false
-        o.device = p.device or term
-    else
-        o.enable_events = false
-        o.device = term
-    end
-    o.canvas = canvas:new(nil, o.device, {o.pos[1]+1, o.pos[2]+1}, {o.size[1]-2, o.size[2]-2})
+    o.canvas = canvas:new(nil, o.device, {2, 1}, {o.size[1]-2, o.size[2]})
+    o:_applyParameters(p)
     return o
 end
 

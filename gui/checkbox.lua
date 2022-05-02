@@ -5,11 +5,14 @@
 
 local widget = require("gui/widget")
 
-local checkbox = widget:new(nil, {1,1},{1,1})
+local checkbox = {}
+setmetatable(checkbox, widget)
+checkbox.__index = checkbox
 
 --- Draw the checkbox widget.
 function checkbox:draw()
     self:clear()
+    self:drawFrame()
     if self.value then
         self:writeTextToLocalXY(string.char(7),1,1)
         -- closed checkbox
@@ -31,6 +34,13 @@ function checkbox:handleMouseClick(mouseButton, mouseX, mouseY)
     return self.enable_events
 end
 
+function checkbox:handleKey(keycode, held)
+    if keycode == keys.space then
+        self.value = not self.value
+        return self.enable_events
+    end
+end
+
 --- Create a new checkbox widget.
 -- @param o original object, usually set to `nil`
 -- @param pos table {x,y}
@@ -39,20 +49,12 @@ end
 -- @return checkbox widget
 function checkbox:new(o,pos,size,text,p)
     o = o or {}
+    o = widget:new(o, pos, size, p)
     setmetatable(o, self)
     self.__index = self
-    o.pos = pos
-    o.size = size
-    o.focused = false
-    o.value = false
+    -- TODO implement this in all the prior widgets and stuff I made so they all call widget's new function first. so that widget can handle all the default/common parameters
     o.text = text
-    if p then
-        o.enable_events = p.enable_events or false
-        o.device = p.device or term
-    else
-        o.enable_events = false
-        o.device = term
-    end
+    o:_applyParameters(p)
     return o
 end
 

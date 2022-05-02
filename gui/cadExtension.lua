@@ -38,8 +38,8 @@ function cad:draw(iterationSize)
     if self.grid.enabled then
         self:drawGrid()
     end
-    for x = 1, table.getn(self.elements) do
-        self.elements[x]:draw(self, iterationSize)
+    for index, value in ipairs(self.elements) do
+        value:draw(self, iterationSize)
     end
 end
 

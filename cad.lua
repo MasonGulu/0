@@ -30,7 +30,6 @@ local function setPrintOutputView(doPrintOutputView)
         win.widgets[2]:updatePos(1,screensize[2]-6)
         win.widgets[2]:updateSize(screensize[1], 5)
     end
-    win:drawFrames()
     win:draw()
 end
 

@@ -1,12 +1,12 @@
 local gui = require("gui/gui") -- required
 local page = require("gui/page")
 local text = require("gui/text")
-local textinput = require("gui/textinput")
 local button = require("gui/button")
-local scrollinput = require("gui/scrollinput")
+local listbox = require("gui/listbox")
 local printoutput = require("gui/printoutput")
+local divider = require("gui/divider")
+local popup = require("gui/popup")
 
-local debug = peripheral.wrap("right")
 
 local colorHexStrings = {
     [0] = "White",
@@ -33,20 +33,21 @@ local colorHexStrings = {
     f   = "Black"
 }
 
-local width, height = term.getSize()
-local buffer = window.create(term.current(), 1, 1, width, height)
-
-local win = gui:new(nil, {page = page:new(nil, {1,1},{28,17}),
-                fileInfo = text:new(nil, {12,17}, {28,3}, "1"),
-                filenameInput = textinput:new(nil, {28,11}, {19,3}),
-                saveButton = button:new(nil, {28,13}, {12,3},"Save"),
-                loadButton = button:new(nil,{39,13},{13,3},"Load"),
-                colorSelector = scrollinput:new(nil, {1, 17}, {12, 3}, colorHexStrings, 15),
-                printoutput = printoutput:new(nil, {28,1},{24,11}),
-                printButton = button:new(nil, {39,15},{13,3},"Print Color"),
-                quitButton = button:new(nil, {39,17},{13,3}, "Quit"),
-                printMonoButton = button:new(nil, {28,15}, {12,3}, "Print Mono"),
-                text:new(nil, {46,11}, {6,3}, ".scd")}, {device=buffer, devMode=false})
+local offset = 2
+local win = gui:new(nil, {fileInfo = text:new(nil, {1,19}, {28,1}, "1"),
+                saveButton = button:new(nil, {29,16}, {11,1},"Save"),
+                loadButton = button:new(nil,{40,16},{12,1},"Load"),
+                colorSelector = listbox:new(nil, {29, 7}, {23, 6}, colorHexStrings, 15),
+                printoutput = printoutput:new(nil, {29,2},{23,4}),
+                printButton = button:new(nil, {29,14},{23,1},"Print"),
+                quitButton = button:new(nil, {29,18},{23,1}, "Quit"),
+                divider:new(nil, {29,1},{23,1},{top=true}),
+                divider:new(nil, {29,6},{23,1}),
+                divider:new(nil, {29,13},{23,1}),
+                divider:new(nil, {29,15},{23,1}),
+                divider:new(nil, {29,17},{23,1}),
+                divider:new(nil, {29,19},{23,1},{bottom=true}),
+                page = page:new(nil, {1,1},{28,18})}, {devMode=false})
 
 for x = 1, 9 do
     colorHexStrings[tostring(x)] = colorHexStrings[x]
@@ -123,11 +124,15 @@ local function removeWhitespace()
         end
     end
     while isEmpty(openDocument[#openDocument].text) do
+        if #openDocument == 1 then
+            return
+        end
         openDocument[#openDocument] = nil
     end
+    
 end
 
-local function printDocument(color)
+local function printDocument(document, color)
     local modem = peripheral.find("modem")
     -- print document starting at startPage and ending at endPage
     if type(modem) == "table" then
@@ -135,7 +140,7 @@ local function printDocument(color)
         if color then
             local id = rednet.lookup("printerColor")
             if id then
-                rednet.send(id, openDocument, "printerColor")
+                rednet.send(id, document, "printerColor")
                 print("Document sent to printer..")
             else
                 print("Color printer not found..")
@@ -143,7 +148,7 @@ local function printDocument(color)
         else
             local id = rednet.lookup("printerMono")
             if id then
-                rednet.send(id, openDocument, "printerMono")
+                rednet.send(id, document, "printerMono")
                 print("Document sent to printer..")
             else
                 print("Mono printer not found..")
@@ -157,11 +162,9 @@ local function printDocument(color)
 end
 
 while true do
-    buffer.setVisible(false)
     local events, values = win:read()
-    buffer.setVisible(true)
     local lineNumber = win.widgets[pageWidget].viewLine+win.widgets[pageWidget].cursorPos[2]-1
-    win.widgets[fileInfoWidget].value[1] = string.format("Line %2u/21 | Page %u/%u", lineNumber, pageNumber, #openDocument)
+    win.widgets[fileInfoWidget]:updateParameters(string.format("Line %2u/21 | Page %u/%u", lineNumber, pageNumber, #openDocument))
     if events == colorInputWidget then
         win.widgets[pageWidget].selectedColor = colorChars[values[colorInputWidget]]
     
@@ -183,34 +186,65 @@ while true do
         updateOpenDocument()
         removeWhitespace()
         --debug.stop()
-        local f = fs.open(values[filenameWidget]..".scd", "w")
-        if f then
-            f.write(textutils.serialize(openDocument))
-            f.close()
+        local filename = popup.fileBrowse(".scd", true)
+        if filename then
+            local f = fs.open(filename, "w")
+            if f then
+                f.write(textutils.serialize(openDocument))
+                f.close()
+            else
+                print("File not saved")
+            end
         else
-            print("File not saved")
+            print("Cancelled")
         end
+        
     elseif events == loadButtonWidget then
-        local f = fs.open(values[filenameWidget]..".scd", "r")
-        if f then
-            local d = f.readAll()
-            openDocument = textutils.unserialise(d)
-            f.close()
+        local filename = popup.fileBrowse(".scd")
+        if filename then
+            local f = fs.open(filename, "r")
+            if f then
+                local d = f.readAll()
+                openDocument = textutils.unserialise(d)
+                f.close()
+            else
+                print("File not found")
+            end
         else
-            print("File not found")
+            print("Cancelled")
         end
         updatePageWithDocument()
     elseif events == printButtonWidget then
         updateOpenDocument()
         removeWhitespace()
-        printDocument(true)
-    elseif events == "printMonoButton" then
-        updateOpenDocument()
-        removeWhitespace()
-        printDocument(false)
+        local printinfo = {color=false,title="",startPage=1,endPage=#openDocument,confirm=false}
+        popup.editT(printinfo, "Print setup; check confirm to print.",3,11)
+        if printinfo.confirm then
+            if printinfo.endPage < printinfo.startPage then
+                local tmp = printinfo.endPage
+                printinfo.endPage = printinfo.startPage
+                printinfo.startPage = tmp
+            end
+            if printinfo.endPage > #openDocument then
+                printinfo.endPage = #openDocument
+            end
+            if printinfo.startPage < 1 then
+                printinfo.startPage = 1
+            end
+            local documentToPrint = {table.unpack(openDocument,printinfo.startPage,printinfo.endPage)}
+            if string.len(printinfo.title) > 0 then
+                documentToPrint.title = printinfo.title
+            end
+            printDocument(documentToPrint, printinfo.color)
+        else
+            print("Cancelled.")
+        end
+        
     elseif events == "quitButton" then
-        term.clear()
-        term.setCursorPos(1,1)
-        return
+        if popup.confirm("Quit?", 1) then
+            term.clear()
+            term.setCursorPos(1,1)
+            return
+        end
     end
 end

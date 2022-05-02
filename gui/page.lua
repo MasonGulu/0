@@ -1,6 +1,8 @@
 local widget = require("gui/widget")
 
-local page = widget:new(nil, {1,1},{1,1})
+local page = {}
+setmetatable(page, widget)
+page.__index = page
 
 page.PAGESIZE = {x=25,y=21}
 page.COLORS = {[0]=colors.white,
@@ -24,26 +26,28 @@ page.COLORS = {[0]=colors.white,
 function page:draw()
     self:clear(colors.black, colors.white)
     -- manual positioning and printing of the rulers
-    self.device.setCursorPos(self.pos[1]+1, self.pos[2])
+    self:drawFrame()
+    
     local tmpString = string.rep("....|", math.ceil((self.size[1]-2)/5))
     tmpString = string.sub(tmpString, 1, self.size[1]-3)
+    self.device.setCursorPos(2, 1)
     self.device.write(tmpString)
-    for dy = 1, self.size[2]-2 do
-        local ypos = dy + self.pos[2]
-        self.device.setCursorPos(self.pos[1], ypos)
+    for dy = 1, self.size[2] do
+        local ypos = dy + 1
+        self.device.setCursorPos(1, ypos)
         tmpString = "."
         if dy % 5 == 0 then
             tmpString = "-"
         end
         self.device.write(tmpString)
-        self.device.setCursorPos(self.pos[1]+self.buttonX, ypos)
-        if dy == self.prevLineY then
+        self.device.setCursorPos(1+self.buttonX, ypos)
+        if dy == self.prevLineY-1 then
             self.device.blit(string.char(30), "0","f")
-        elseif dy == self.prevPageY then
+        elseif dy == self.prevPageY-1 then
             self.device.blit(string.char(27), "0","f")
-        elseif dy == self.nextLineY then
+        elseif dy == self.nextLineY-1 then
             self.device.blit(string.char(31), "0","f")
-        elseif dy == self.nextPageY then
+        elseif dy == self.nextPageY-1 then
             self.device.blit(string.char(26), "0","f")
         else
             self.device.blit(" ", "0","f")
@@ -51,12 +55,12 @@ function page:draw()
     end
 
     for line = self.viewLine, self.viewLine + self.viewSize[2] - 1 do
-        local ypos = line - self.viewLine + 1 + self.pos[2]
-        self.device.setCursorPos(self.pos[1]+1, ypos)
+        local ypos = line - self.viewLine + 2
+        self.device.setCursorPos(2, ypos)
         self.device.blit(self.pageText[line], self.pageColor[line], string.rep("0",self.PAGESIZE.x))
     end
 
-    self.device.setCursorPos(self.pos[1]+self.cursorPos[1], self.pos[2]+self.cursorPos[2])
+    self.device.setCursorPos(1+self.cursorPos[1], 1+self.cursorPos[2])
     local tmpIndex = self.cursorPos[1]
     local tmpString = string.sub(self.pageText[self.cursorPos[2]+self.viewLine-1], tmpIndex, tmpIndex)
     local tmpCol =    string.sub(self.pageColor[self.cursorPos[2]+self.viewLine-1], tmpIndex, tmpIndex)
@@ -65,6 +69,8 @@ function page:draw()
         tmpFG = '0'
     end
     self.device.blit(tmpString, tmpFG, tmpCol)
+    self.device.setBackgroundColor(colors.black)
+    self.device.setTextColor(colors.white)
 end
 
 function page:getColorTextFromLine(line, color)
@@ -100,16 +106,16 @@ function page:updateSize(_, height)
     self.size = {self.PAGESIZE.x+3, height}
     self.verticalScroll = false
     self.horizontalScroll = false
-    self.viewSize = {self.size[1]-3,self.size[2]-2}
+    self.viewSize = {self.size[1]-3,self.size[2]-1}
     self.viewLine = 1 -- line viewport is drawn starting at
     self.maxViewLine = self.PAGESIZE.y - self.viewSize[2] + 1
     self.cursorPos = {1,1}
 
-    self.nextLineY = self.size[2]-2
-    self.prevLineY = 1
+    self.nextLineY = self.size[2]
+    self.prevLineY = 2
 
-    self.nextPageY = self.size[2]-3
-    self.prevPageY = 2
+    self.nextPageY = self.size[2]-1
+    self.prevPageY = 3
 
     self.buttonX = self.size[1]-2
 
@@ -117,7 +123,7 @@ end
 
 function page:handleMouseClick(mouseButton, mouseX, mouseY)
     local x,y = self:convertGlobalXYToLocalXY(mouseX, mouseY)
-    if y > 0 and y < self.size[2]-1 and x > 0 and x < self.size[1]-1 then
+    if y > 1 and y < self.size[2]+1 and x > 0 and x < self.size[1]-1 then
         -- mouse click is in the window area
         if x == self.buttonX then
             -- mouse click is somewhere in the button area
@@ -147,7 +153,7 @@ function page:handleMouseClick(mouseButton, mouseX, mouseY)
             elseif mouseButton == 2 then
                 -- intentionally do not update cursor pos
             else
-                self.cursorPos = {x,y}
+                self.cursorPos = {x,y-1}
             end
             
         end
@@ -165,7 +171,6 @@ function page._enforceRange(value, vmin, vmax)
 end
 
 function page:handleKey(keycode, held)
-    self:debug("Key was pressed", keycode)
     if keycode == keys.left then
         -- left
         self.cursorPos[1] = self.cursorPos[1] - 1
@@ -212,6 +217,12 @@ function page:handleKey(keycode, held)
     elseif keycode == keys.delete then
         -- delete
         self:putCharAtCursorPos(" ")
+    elseif keycode == keys.pageDown then
+        self.value = "nextPage"
+        return true
+    elseif keycode == keys.pageUp then
+        self.value = "prevPage"
+        return true
     end
     if self.cursorPos[2] > self.viewSize[2] then
         self.viewLine = self.viewLine+1
@@ -238,6 +249,8 @@ function page._replaceCharInString(str, char, index)
     return str
 end
 
+
+
 function page:putCharAtCursorPos(char, color)
     if color then
         self.selectedColor = color
@@ -248,7 +261,6 @@ function page:putCharAtCursorPos(char, color)
 end
 
 function page:handleChar(char)
-    self:debug("Char pressed ", char)
     self:putCharAtCursorPos(char)
     self.cursorPos[1] = self.cursorPos[1] + 1
     if self.cursorPos[1] > self.viewSize[1] then
@@ -269,6 +281,12 @@ function page:handleChar(char)
     end
 end
 
+function page:handlePaste(text)
+    for c in text:gmatch"." do
+        self:handleChar(c)
+    end
+end
+
 function page:erase()
     for y = 1, self.PAGESIZE.y do
         self.pageText[y] = string.rep(" ",self.PAGESIZE.x)
@@ -284,12 +302,13 @@ function page:new(o,pos,size,p)
     setmetatable(o, self)
     self.__index = self
     -- TODO implement this in all the prior widgets and stuff I made so they all call widget's new function first. so that widget can handle all the default/common parameters
-    self:updateSize(size[1],size[2])
-    self.theme.internalBG = colors.white -- this works but I don't understand why. these should be o.
-    self.pageText = {}
-    self.pageColor= {}
-    self.selectedColor = "f"
+    o:updateSize(size[1],size[2])
+    o.theme.internalBG = colors.white -- this works but I don't understand why. these should be o.
+    o.pageText = {}
+    o.pageColor= {}
+    o.selectedColor = "f"
     o:erase()
+    o:_applyParameters(p)
     return o
 end
 

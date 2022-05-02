@@ -1,9 +1,12 @@
 local widget = require("gui/widget")
 
-local scrollinput = widget:new(nil, {1,1}, {1,1})
+local scrollinput = {}
+setmetatable(scrollinput, widget)
+scrollinput.__index = scrollinput
 
 function scrollinput:draw()
     self:clear()
+    self:drawFrame()
     local preppedString = string.sub(self.options[self.value], 1, self.size[1]-3)
     self:writeTextToLocalXY(preppedString, 2, 1)
     self:writeTextToLocalXY(string.char(18), 1, 1)
@@ -42,11 +45,31 @@ function scrollinput:handleMouseScroll(scrollDirection, mouseX, mouseY)
     return self.enable_events
 end
 
+function scrollinput:handleKey(key, held)
+    if key == keys.down then
+        self.value = self.value + 1
+        if self.value > self.length then
+            self.value = 1
+        end
+    elseif key == keys.up then
+        self.value = self.value - 1
+        if self.value < 1 then
+            self.value = self.length
+        end
+    end
+    return self.enable_events
+end
+
+function scrollinput:updateParameters(options, p)
+    self.value = 1
+    self.options = options
+    self.length = #self.options
+    self:_applyParameters(p)
+end
+
 -- Create a new scroll input
 -- options: a 1d array of text options. Value = index of selected option
--- length, amount of options
-function scrollinput:new(o, pos, size, options, length, p)
-    size = {size[1], 3}
+function scrollinput:new(o, pos, size, options, p)
     o = o or {}
     o = widget:new(o, pos, size, p)
     setmetatable(o, self)
@@ -55,7 +78,8 @@ function scrollinput:new(o, pos, size, options, length, p)
     o.value = 1
     o.options = options
     o.enable_events = true
-    o.length = length
+    o.length = #o.options
+    o:_applyParameters(p)
     return o
 end
 

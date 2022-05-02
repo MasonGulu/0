@@ -2,6 +2,8 @@
 
 This is a GUI library loosely inspired by PySimpleGUI intended for CC:Tweaked, but should function on just about any version of CC.
 
+for more documentation see https://docs.google.com/document/d/1LMWfQ-tIe_AFUXph0VzJAEO2LVjeUGOOEspEsPrypEo/edit?usp=sharing
+
 ## Quickstart
 
 Add the gui/ directory to your CC computer, include gui.lua, widget.lua, and any widget/extension files you'd like. To create a gui program first include what you require.
@@ -32,9 +34,9 @@ In this snippet `events` contains either a `number` or `nil`, if it contains a n
 
 ## Included example programs
 
-* canvasDemo.lua - a simple program that shows the capabilities of the canvas widget.
-* helloworld.lua - the sample program shown in the quickstart section.
-* cad.lua - [ADVANCED!] a 'cli' CAD interface that uses the textinput widget (swapping numOnly on the fly!), printoutput widget, and cadExtension for the canvas widget.
+* kinda works? canvasDemo.lua - a simple program that shows the capabilities of the canvas widget.
+* helloworld.lua - a sample program
+* DO NOT USE! UNUPDATED! cad.lua - [ADVANCED!] a 'cli' CAD interface that uses the textinput widget (swapping numOnly on the fly!), printoutput widget, and cadExtension for the canvas widget.
 
 ## Unrelated information
 

@@ -1,8 +1,11 @@
 local widget = require("gui/widget")
-local textinput = widget:new(nil, {1,1}, {1,1})
+local textinput = {}
+setmetatable(textinput, widget)
+textinput.__index = textinput
 
 function textinput:draw()
     self:clear()
+    self:drawFrame()
     if self.numOnly then
         self:writeTextToLocalXY('#',1,1)
     else
@@ -14,18 +17,21 @@ end
 function textinput:handleKey(keycode, held)
     if keycode == keys.backspace then
         -- backspace
-        self.value = self.value:sub(1,-2)
+        self.value = tostring(self.value):sub(1,-2)
     elseif keycode == keys.enter then
         -- enter
         return true
+    end
+    if tonumber(self.value) and tostring(self.value):sub(-1,-1) ~= "." then
+        self.value = tonumber(self.value)
     end
     return false
 end
 
 function textinput:handleChar(char)
     if self.numOnly then
-        if tonumber(self.value..char) then
-            if self.value:len() < self.maxTextLen then
+        if tonumber(self.value..char) or char == '.' then
+            if tostring(self.value):len() < self.maxTextLen then
                 self.value = self.value..char
             end
         end
@@ -34,32 +40,34 @@ function textinput:handleChar(char)
             self.value = self.value..char
         end
     end
+    if tonumber(self.value) and tostring(self.value):sub(-1,-1) ~= "." then
+        self.value = tonumber(self.value)
+    end
+    return false
+end
+
+function textinput:handleMouseClick()
+    if tonumber(self.value) and tostring(self.value):sub(-1,-1) ~= "." then
+        self.value = tonumber(self.value)
+    end
     return false
 end
 
 function textinput:updateSize(width, height)
-    self.size = {width, height}
+    widget.updateSize(self, width, height)
     self.maxTextLen = self.size[1]-3
 end
 
+
 function textinput:new(o, pos, size, p)
     o = o or {}
+    o = widget:new(o, pos, size, p)
     setmetatable(o, self)
     self.__index = self
-    o.pos = pos
-    o.size = size
-    o.focused = false
+    -- TODO implement this in all the prior widgets and stuff I made so they all call widget's new function first. so that widget can handle all the default/common parameters
     o.value = ""
     o.maxTextLen = o.size[1]-3
-    if p then
-        o.enable_events = p.enable_events or false
-        o.device = p.device or term
-        o.numOnly = p.numOnly or false
-    else
-        o.enable_events = false
-        o.device = term
-        o.numOnly = false
-    end
+    o:_applyParameters(p)
     return o
 end
 

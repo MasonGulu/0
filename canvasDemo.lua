@@ -7,9 +7,9 @@ local checkbox = require("gui/checkbox")
 local termsize = {term.getSize()}
 local win = gui:new(nil, {canvas:new(nil, {1,1}, {termsize[1]-9, termsize[2]-4}),
                           printoutput:new(nil, {termsize[1]-9, 1}, {10, termsize[2]-6}),
-                          checkbox:new(nil, {termsize[1]-9,termsize[2]-6}, {10, 3}, "Timeout"),
-                          button:new(nil, {1,termsize[2]-4}, {termsize[1], 3}, "Next"),
-                          button:new(nil, {1,termsize[2]-2}, {termsize[1], 3}, "Quit")}, {devMode=false, timeout=0.05})
+                          checkbox:new(nil, {termsize[1]-9,termsize[2]-5}, {10, 1}, "Timeout"),
+                          button:new(nil, {1,termsize[2]-2}, {termsize[1], 1}, "Next"),
+                          button:new(nil, {1,termsize[2]-1}, {termsize[1], 1}, "Quit")}, {devMode=false, timeout=0.05})
 
 local function print(a)
     win.widgets[2]:print(a)

@@ -1,15 +1,20 @@
-local gui = require("gui/gui") -- required
+local gui = require("gui/gui")
 local text = require("gui/text")
 local button = require("gui/button")
-
-local win = gui:new(nil, {text:new(nil, {1,1}, {14,3}, "Hello World!"), button:new(nil, {1,3}, {14,3}, "Quit!")}, {timeout=0.10,devMode=true})
-
+local divider = require("gui/divider")
+ 
+local win = gui:new(nil, {
+ divider:new(nil, {1,1}, {10,1}, {top=true}),
+ text:new(nil, {1,2}, {10,1}, "Hello!"),
+ bye = button:new(nil, {1,3}, {10,1}, "Bye!"),
+ divider:new(nil, {1,4}, {10,1}, {bottom=true})
+})
+ 
 while true do
-    local events, values = win:read()
-    if events == 2 then
-        -- The "Quit!" button was pressed.
-        term.clear()
-        term.setCursorPos(1,1)
-        break
-    end
+ local event, values = win:read()
+ if event == "bye" then
+   term.clear()
+   term.setCursorPos(1,1)
+   return
+ end
 end

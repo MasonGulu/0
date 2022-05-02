@@ -30,13 +30,12 @@ And finally set up your event loop.
         end
     end
 
-In this snippet `events` contains either a `number` or `nil`, if it contains a number then that number is the index of the widget which was interracted with. `values` contains a table of the values of each widget at the moment win:read returns.
+In this snippet `events` contains either a `number`, `string` or `nil`, if it contains anything other than nil then that is the index of the widget which was interracted with. `values` contains a table of the values of each widget at the moment win:read returns.
 
 ## Included example programs
 
 * kinda works? canvasDemo.lua - a simple program that shows the capabilities of the canvas widget.
 * helloworld.lua - a sample program
-* DO NOT USE! UNUPDATED! cad.lua - [ADVANCED!] a 'cli' CAD interface that uses the textinput widget (swapping numOnly on the fly!), printoutput widget, and cadExtension for the canvas widget.
 
 ## Unrelated information
 
@@ -44,3 +43,6 @@ In this snippet `events` contains either a `number` or `nil`, if it contains a n
 * printing/printerController.lua - the main executable that each printer computer runs, uploaded from a host computer on boot.
 * printing/printerManager.lua - the control script for a main host printing computer.
 * printing/printerStartup.lua - put in each printer as startup.lua
+
+
+* DO NOT USE! UNUPDATED! cad.lua - [ADVANCED!] a 'cli' CAD interface that uses the textinput widget (swapping numOnly on the fly!), printoutput widget, and cadExtension for the canvas widget.

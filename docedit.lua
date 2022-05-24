@@ -1,11 +1,11 @@
-local gui = require("gui/gui") -- required
-local page = require("gui/page")
-local text = require("gui/text")
-local button = require("gui/button")
-local listbox = require("gui/listbox")
-local printoutput = require("gui/printoutput")
-local divider = require("gui/divider")
-local popup = require("gui/popup")
+local gui = require("gui.gui") -- required
+local page = require("gui.page")
+local text = require("gui.text")
+local button = require("gui.button")
+local listbox = require("gui.listbox")
+local printoutput = require("gui.printoutput")
+local divider = require("gui.divider")
+local popup = require("gui.popup")
 
 
 local colorHexStrings = {
@@ -34,20 +34,25 @@ local colorHexStrings = {
 }
 
 local offset = 2
-local win = gui:new(nil, {fileInfo = text:new(nil, {1,19}, {28,1}, "1"),
-                saveButton = button:new(nil, {29,16}, {11,1},"Save"),
-                loadButton = button:new(nil,{40,16},{12,1},"Load"),
-                colorSelector = listbox:new(nil, {29, 7}, {23, 6}, colorHexStrings, 15),
-                printoutput = printoutput:new(nil, {29,2},{23,4}),
-                printButton = button:new(nil, {29,14},{23,1},"Print"),
-                quitButton = button:new(nil, {29,18},{23,1}, "Quit"),
-                divider:new(nil, {29,1},{23,1},{top=true}),
-                divider:new(nil, {29,6},{23,1}),
-                divider:new(nil, {29,13},{23,1}),
-                divider:new(nil, {29,15},{23,1}),
-                divider:new(nil, {29,17},{23,1}),
-                divider:new(nil, {29,19},{23,1},{bottom=true}),
-                page = page:new(nil, {1,1},{28,18})}, {devMode=false})
+local win = gui:new(nil, {
+    divider:new(nil,{1,1},{28,1},{top=true}),
+    page = page:new(nil, {1,2},{28,16}),
+    fileInfo = text:new(nil, {1,18}, {28,1}, "1"),
+    divider:new(nil, {1,19}, {28,1}, {bottom=true}),
+
+    saveButton = button:new(nil, {30,16}, {10,1},"Save"),
+    loadButton = button:new(nil,{40,16},{12,1},"Load"),
+    colorSelector = listbox:new(nil, {30, 7}, {22, 6}, colorHexStrings),
+    printoutput = printoutput:new(nil, {30,2},{22,4}),
+    printButton = button:new(nil, {30,14},{22,1},"Print"),
+    quitButton = button:new(nil, {30,18},{22,1}, "Quit"),
+    divider:new(nil, {30,1},{22,1},{top=true}),
+    divider:new(nil, {30,6},{22,1}),
+    divider:new(nil, {30,13},{22,1}),
+    divider:new(nil, {30,15},{22,1}),
+    divider:new(nil, {30,17},{22,1}),
+    divider:new(nil, {30,19},{22,1},{bottom=true}),
+}, {devMode=false, autofit=true})
 
 for x = 1, 9 do
     colorHexStrings[tostring(x)] = colorHexStrings[x]
@@ -71,8 +76,6 @@ local openDocument = {
         color={}
     }
 }
-
-win.widgets[colorInputWidget].value = 15
 
 
 local colorChars = {"1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"}
@@ -166,7 +169,7 @@ while true do
     local lineNumber = win.widgets[pageWidget].viewLine+win.widgets[pageWidget].cursorPos[2]-1
     win.widgets[fileInfoWidget]:updateParameters(string.format("Line %2u/21 | Page %u/%u", lineNumber, pageNumber, #openDocument))
     if events == colorInputWidget then
-        win.widgets[pageWidget].selectedColor = colorChars[values[colorInputWidget]]
+        win.widgets[pageWidget].selectedColor = colorChars[values[colorInputWidget][1]]
     
     elseif events == pageWidget then
         updateOpenDocument()

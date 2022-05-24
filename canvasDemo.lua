@@ -1,8 +1,8 @@
-local gui = require("gui/gui")
-local canvas = require("gui/canvas")
-local button = require("gui/button")
-local printoutput = require("gui/printoutput")
-local checkbox = require("gui/checkbox")
+local gui = require("gui.gui")
+local canvas = require("gui.canvas")
+local button = require("gui.button")
+local printoutput = require("gui.printoutput")
+local checkbox = require("gui.checkbox")
 
 local termsize = {term.getSize()}
 local win = gui:new(nil, {canvas:new(nil, {1,1}, {termsize[1]-9, termsize[2]-4}),

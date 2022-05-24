@@ -6,11 +6,11 @@ for more documentation see https://docs.google.com/document/d/1LMWfQ-tIe_AFUXph0
 
 ## Quickstart
 
-Add the gui/ directory to your CC computer, include gui.lua, widget.lua, and any widget/extension files you'd like. To create a gui program first include what you require.
+Add the gui. directory to your CC computer, include gui.lua, widget.lua, and any widget/extension files you'd like. To create a gui program first include what you require.
 
-    local gui = require("gui/gui") -- required
-    local text = require("gui/text")
-    local button = require("gui/button")
+    local gui = require("gui.gui") -- required
+    local text = require("gui.text")
+    local button = require("gui.button")
 
 Then create your window table/object
 

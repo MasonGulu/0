@@ -1,8 +1,8 @@
-local gui = require("gui/gui")
-local canvas = require("gui/canvas")
-local textinput = require("gui/textinput")
-local printoutput = require("gui/printoutput")
-local cadLib = require("gui/cadExtension")
+local gui = require("gui.gui")
+local canvas = require("gui.canvas")
+local textinput = require("gui.textinput")
+local printoutput = require("gui.printoutput")
+local cadLib = require("gui.cadExtension")
 
 local screensize = {term.getSize()}
 

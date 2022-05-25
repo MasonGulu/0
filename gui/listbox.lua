@@ -128,10 +128,16 @@ function listbox:handleMouseScroll(scrollDirection)
 end
 
 function listbox:updateParameters(T, p)
+  if #T < #self.T then
+    -- list is smaller
+    self.value = {}
+    self.scrollOffset = 0
+    self._selectedOrder = {}
+    self._selectedAmount = 0
+  end
   self.T = T
-  self.value = {}
-  self.scrollOffset = 0
   self:_applyParameters(p)
+  self.scrollOffset = math.man(math.min(self.scrollOffset, #self.T-1),0)
   local i = 1
   while (self._selectedAmount < self.minSelected) do
     self.value[i] = true
@@ -144,8 +150,10 @@ end
 function listbox:getValue()
   local returnValue = {}
   for key, value in pairs(self.value) do
-    if value then
+    if value and key < #self.T then
       returnValue[#returnValue + 1] = key
+    elseif key > #self.T then
+      self.value[key] = nil
     end
   end
   return returnValue

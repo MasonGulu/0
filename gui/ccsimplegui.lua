@@ -10,6 +10,8 @@ local function convertGUITableToWidgetTable(guiTable)
   local requiredWidgets = {}
   local rowWidths = {}
 
+
+
   guiTable.parameters = guiTable.parameters or {}
   guiTable.parameters.device = guiTable.parameters.device or term
 
@@ -18,9 +20,9 @@ local function convertGUITableToWidgetTable(guiTable)
     guiTable.width = math.floor(width * guiTable.width)
   end
 
-  for kRow, vRow in ipairs(guiTable.widgets) do
+  for kRow, vRow in pairs(guiTable.widgets) do
     rowWidths[kRow] = rowWidths[kRow] or {}
-    for kColumn, vColumn in ipairs(vRow) do
+    for kColumn, vColumn in pairs(vRow) do
       -- iterate over every widget
 
       vColumn.width = vColumn.width or (1 / (#vRow - (rowWidths[kRow].fixedWidthCount or 0)))
@@ -55,6 +57,7 @@ local function convertGUITableToWidgetTable(guiTable)
     end
   end
 
+
   for kRow, vRow in pairs(guiTable.widgets) do
     for kColumn, vColumn in pairs(vRow) do
       local widgetXPos = 1
@@ -72,6 +75,10 @@ local function convertGUITableToWidgetTable(guiTable)
         -- this is the last element in the row
         widgetWidth = widgetWidth + (guiTable.width - (widgetXPos + widgetWidth))
       end
+      if widgetWidth < 1 then
+        error(string.format("Row %u is already full, cannot insert element %u.", kRow, kColumn))
+      end
+      print(widgetWidth)
       vColumn.posArgs = vColumn.posArgs or {}
       local tmpWidget = nil
       if #vColumn.posArgs > 0 then

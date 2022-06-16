@@ -112,6 +112,8 @@ function gui:read()
     end
   elseif event == "term_resize" and self.autofit then
     self:doAutofit()
+  else
+    self.widgets[self.focusedWidget]:otherEvent({event,a,b,c,d})
   end
   for key, v in pairs(self.widgets) do
     values[key] = v:getValue()

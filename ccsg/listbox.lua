@@ -1,24 +1,32 @@
+--- A scrollable widget that allows selection of multiple elements from a list.
+-- Inherits from the widget object.
+-- @see widget
+-- @module listbox
 local widget = require("gui.widget")
+
+-- @table listbox defaults for the listbox widget
 local listbox = {
-  type = "listbox",
-  minSelected = 1,
-  maxSelected = 1,
+  type = "listbox", -- string, used for gui packing/unpacking (must match filename without extension!)
+  minSelected = 1, -- int, maximum elements selected 1 default
+  maxSelected = 1, -- int, minimum elements selected 1 default
   _selectedAmount = 0,
-  deselectOldSelections = true, -- deselect the last selected element to make room for the next element
-  scrollOffset = 0,
-  enable_events = true
+  deselectOldSelections = true, -- deselect the last selected element to make room for the next element, true default
+  _scrollOffset = 0,
+  enable_events = true -- bool, events are enabled by default for listboxes
 }
+
+-- Setup inheritence
 setmetatable(listbox, widget)
 listbox.__index = listbox
 
+--- Draw the listbox widget.
 function listbox:draw()
   self:clear()
   self:drawFrame()
   self:writeTextToLocalXY(string.char(30), self.size[1] - 2, 1)
   self:writeTextToLocalXY(string.char(31), self.size[1] - 2, self.size[2])
   for key, value in ipairs(self.T) do
-    -- print(key,value,self.scrollOffset)
-    self.device.setCursorPos(2, key - self.scrollOffset)
+    self.device.setCursorPos(2, key - self._scrollOffset)
     self:setInternalColor(self.value[key] == true)
     self.device.write(tostring(value):sub(1, self.size[1] - 3))
     self:setPreviousColor()
@@ -67,6 +75,11 @@ function listbox:_selectElement(elementIndex)
   end
 end
 
+--- Handle mouse_click events
+-- @tparam number mouseButton
+-- @tparam number mouseX
+-- @tparam number mouseY
+-- @treturn boolean element has been selected/deselected and enable_events
 function listbox:handleMouseClick(mouseButton, mouseX, mouseY)
   local x, y = self:convertGlobalXYToLocalXY(mouseX, mouseY)
 
@@ -74,59 +87,71 @@ function listbox:handleMouseClick(mouseButton, mouseX, mouseY)
     -- Click is on the sidebar
     if y == 1 then
       -- up
-      self.scrollOffset = self.scrollOffset - 1
-      if self.scrollOffset < 0 then
+      self.scrollOffset = self._scrollOffset - 1
+      if self._scrollOffset < 0 then
         self.scrollOffset = 0
       end
     elseif y == self.size[2] then
       -- down
-      self.scrollOffset = self.scrollOffset + 1
-      if self.scrollOffset > #self.T - 1 then
+      self.scrollOffset = self._scrollOffset + 1
+      if self._scrollOffset > #self.T - 1 then
         self.scrollOffset = #self.T - 1
       end
     end
   elseif x > 1 and x < self.size[1] - 2 and mouseButton == 1 then
     -- Click is on an element
-    self:_selectElement(y + self.scrollOffset)
+    self:_selectElement(y + self._scrollOffset)
     return self.enable_events
   end
   return false
 end
 
+--- Handle key events
+-- @tparam int keycode
+-- @tparam bool held
+-- @treturn bool enter is used to toggle selection of an element and enable_events
 function listbox:handleKey(code, held)
   if code == keys.up then
-    self.scrollOffset = self.scrollOffset - 1
-    if self.scrollOffset < 0 then
+    self.scrollOffset = self._scrollOffset - 1
+    if self._scrollOffset < 0 then
       self.scrollOffset = 0
     end
   elseif code == keys.down then
     -- down
-    self.scrollOffset = self.scrollOffset + 1
-    if self.scrollOffset > #self.T - 1 then
+    self.scrollOffset = self._scrollOffset + 1
+    if self._scrollOffset > #self.T - 1 then
       self.scrollOffset = #self.T - 1
     end
   elseif code == keys.enter then
-    self:_selectElement(self.scrollOffset + 1)
+    self:_selectElement(self._scrollOffset + 1)
     return self.enable_events
   end
   return false
 end
 
-function listbox:handleMouseScroll(scrollDirection)
-  if scrollDirection == 1 then
-    self.scrollOffset = self.scrollOffset + 1
-    if self.scrollOffset > #self.T - 1 then
+--- Event handler function called when a mouse_scroll event occurs with the widget focused
+-- @tparam int direction
+-- @tparam int mouseX global X
+-- @tparam int mouseY global Y
+-- @treturn bool this widget wants to notify an event occured
+function listbox:handleMouseScroll(direction, mouseX, mouseY)
+  if direction == 1 then
+    self.scrollOffset = self._scrollOffset + 1
+    if self._scrollOffset > #self.T - 1 then
       self.scrollOffset = #self.T - 1
     end
-  elseif scrollDirection == -1 then
-    self.scrollOffset = self.scrollOffset - 1
-    if self.scrollOffset < 0 then
+  elseif direction == -1 then
+    self.scrollOffset = self._scrollOffset - 1
+    if self._scrollOffset < 0 then
       self.scrollOffset = 0
     end
   end
   return false
 end
 
+--- Update table and parameters
+-- @tparam table T table of selections
+-- @tparam[opt] table p
 function listbox:updateParameters(T, p)
   if #T < #self.T then
     -- list is smaller
@@ -137,7 +162,7 @@ function listbox:updateParameters(T, p)
   end
   self.T = T
   self:_applyParameters(p)
-  self.scrollOffset = math.man(math.min(self.scrollOffset, #self.T-1),0)
+  self.scrollOffset = math.man(math.min(self._scrollOffset, #self.T-1),0)
   local i = 1
   while (self._selectedAmount < self.minSelected) do
     self.value[i] = true
@@ -147,6 +172,8 @@ function listbox:updateParameters(T, p)
   end
 end
 
+--- Get listbox's value
+-- @treturn table integer indexed array of selected options
 function listbox:getValue()
   local returnValue = {}
   for key, value in pairs(self.value) do
@@ -159,13 +186,18 @@ function listbox:getValue()
   return returnValue
 end
 
-function listbox:new(o, pos, size, T, p)
+--- Create a new button widget.
+-- @tparam table pos {x,y}
+-- @tparam table size {width,height}
+-- @tparam table T table of selections
+-- @tparam[opt] table p
+-- @treturn table button
+function listbox:new(pos, size, T, p)
   -- takes an ordered table of string displayable objects, value is the index of the selected element
   o = o or {}
   o = widget:new(o, pos, size, p)
   setmetatable(o, self)
   self.__index = self
-  -- TODO implement this in all the prior widgets and stuff I made so they all call widget's new function first. so that widget can handle all the default/common parameters
   o.T = T
   o.value = {}
   o._selectedOrder = {} -- start -> end = oldest -> newest selected

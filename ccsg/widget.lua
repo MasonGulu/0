@@ -1,7 +1,7 @@
 --- The base widget object.
 -- @module widget
+local expect = require("cc.expect")
 
---local box = require("gui.box")
 
 --- Default widget parameters
 -- @table widget
@@ -33,10 +33,20 @@ widget.theme = {
   frameFG = colors.white, -- color, text color of frame
   frameBG = colors.black, -- color, background color of frame
   internalFG = colors.white, -- color, text color of internal widget
-  internalBG = colors.black -- color, text color of internal widget
+  internalBG = colors.black, -- color, text color of internal widget
+  internalInvert = false, -- should fg/bg colors be swapped for internals
 }
 
+widget.theme.__index = widget.theme
+
+--- Draw a character repeated vertically
+-- @tparam string char
+-- @tparam int x
+-- @tparam int height
 function widget:_drawCharacterVertically(char, x, height)
+  expect(1, char, "string")
+  expect(2, x, "number")
+  expect(3, height, "number")
   for y = 1, height do
     self.device.setCursorPos(x, y)
     self.device.write(char)
@@ -44,7 +54,7 @@ function widget:_drawCharacterVertically(char, x, height)
 end
 
 --- Draw the frame of the widget.
--- This creates/overwrites the previous box object the widget had and applies theme colors.
+-- Applies theme colors
 function widget:drawFrame()
   if self.frame then
     if self.focused then
@@ -65,99 +75,124 @@ function widget:drawFrame()
 end
 
 --- Draw the internal area of the widget.
--- Applies theme colors.
+-- Applies theme colors and reverts.
 function widget:draw()
   self:clear()
+  self:drawFrame()
 end
 
 --- Clear the internal area of the widget.
--- Applies theme colors.
+-- Applies theme colors and reverts.
 function widget:clear(FG, BG)
-  --self.debugStop()
   self:setInternalColor(false, FG, BG)
   self.device.clear()
   self:setPreviousColor()
-  --self:drawFrame()
 end
 
---- Convert from device X,Y space to local X,Y space with 1,1 being the top left corner of the inside of the widget.
--- @param x device X
--- @param y device y
--- @return local X
--- @return local Y
+--- Convert from device X,Y space to local X,Y space with 1,1 being the top left corner of the widget (inside the frame!)
+-- @tparam int x device X
+-- @tparam int y device y
+-- @treturn int local X
+-- @treturn int local Y
 function widget:convertGlobalXYToLocalXY(x, y)
+  expect(1, x, "number")
+  expect(2, y, "number")
   return x - self.pos[1], y - self.pos[2] + 1
 end
 
 --- Convert from local X,Y space to device X,Y space
--- @param x local x
--- @param y local y
--- @return local x
--- @return local y
+-- @tparam int x local x
+-- @tparam int y local y
+-- @treturn int device x
+-- @treturn int device y
 function widget:convertLocalXYToGlobalXY(x, y)
+  expect(1, x, "number")
+  expect(2, y, "number")
   return x + self.pos[1], y + self.pos[2]
 end
 
 --- Set the focus state of the widget, basically just sets the object's focused flag and draws the corners with the corrosponding characters.
 -- Applies theme colors.
--- @param focus focus flag bool
+-- @tparam bool focus
 function widget:setFocus(focus)
+  expect(1, focus, "boolean")
   self.focused = focus
   self:drawFrame()
 end
 
 --- Event handler function called when a mouse_click event occurs on the widget.
--- @param mouseButton
--- @param mouseX
--- @param mouseY
--- @return true if this widget wants to notify an event occured
+-- @tparam int mouseButton
+-- @tparam int mouseX global X
+-- @tparam int mouseY global Y
+-- @treturn bool this widget wants to notify an event occured
 function widget:handleMouseClick(mouseButton, mouseX, mouseY)
   local x, y = self:convertGlobalXYToLocalXY(mouseX, mouseY)
-  return self.enable_events
+  return false
 end
 
 --- Event handler function called when a key event occurs with the widget focused.
--- @param keycode
--- @param held
--- @return true if this widget wants to notify an event occured
+-- @tparam int keycode
+-- @tparam int held
+-- @treturn bool this widget wants to notify an event occured
 function widget:handleKey(keycode, held)
-  return self.enable_events
+  return false
 end
 
 --- Event handler function called when a mouse_scroll event occurs with the widget focused
+-- @tparam int direction
+-- @tparam int mouseX global X
+-- @tparam int mouseY global Y
+-- @treturn bool this widget wants to notify an event occured
 function widget:handleMouseScroll(direction, mouseX, mouseY)
   return false
 end
 
 --- Event handler function called when a paste event occurs with the widget focused
+-- @tparam string text
+-- @treturn bool this widget wants to notify an event occured
 function widget:handlePaste(text)
   return false
 end
 
 --- Event handler function called when a char event occurs with the widget focused.
--- @param char
--- @return true if this widget wants to notify an event occured
+-- @tparam character char
+-- @treturn bool this widget wants to notify an event occured
 function widget:handleChar(char)
-  return self.enable_events
+  return false
+end
+
+--- Event handler for any other events that aren't covered by the other handles
+-- @tparam table e event table {os.pullEvent()}
+-- @treturn bool this widget wants to notify an event occured
+function widget:otherEvent(e)
+  return false
 end
 
 --- Function called to update the position of the widget.
--- @param x
--- @param y
+-- @tparam int x
+-- @tparam int y
 function widget:updatePos(x, y)
+  expect(1, x, "number")
+  expect(2, y, "number")
   self.pos = { x, y }
   self.device.reposition(x, y)
 end
 
 --- Function called to update the size of the widget.
--- @param width
--- @param height
+-- @tparam int width
+-- @tparam int height
 function widget:updateSize(width, height)
+  expect(1, width, "number")
+  expect(2, height, "number")
   self.size = { width, height }
   self.device.reposition(self.pos[1], self.pos[2], width, height)
 end
 
---- Internally used function called to set the colors to match the widget's internal theme and store the previous colors.
+--- Function to set the term colors according to the internal color theme
+-- Remembers previous colors to allow reverting
+-- @tparam[opt] bool invert
+-- @param[optchain] FG
+-- @param[optchain] BG
 function widget:setInternalColor(invert, FG, BG)
   self.previousBG = self.device.getBackgroundColor()
   self.previousFG = self.device.getTextColor()
@@ -168,10 +203,11 @@ function widget:setInternalColor(invert, FG, BG)
     self.device.setBackgroundColor(BG or self.theme.internalBG)
     self.device.setTextColor(FG or self.theme.internalFG)
   end
-
 end
 
---- Internally used function called to set the colors to match the widget's frame theme and store the previous colors.
+--- Function to set the term colors according to the frame color theme
+-- Remembers previous colors to allow reverting
+-- @tparam[opt] bool invert
 function widget:setFrameColor(invert)
   self.previousBG = self.device.getBackgroundColor()
   self.previousFG = self.device.getTextColor()
@@ -185,7 +221,7 @@ function widget:setFrameColor(invert)
 
 end
 
---- Internally used function called to reset colors to the previously stored values.
+--- Reverts colors to what they were previously
 function widget:setPreviousColor()
   self.device.setBackgroundColor(self.previousBG)
   self.device.setTextColor(self.previousFG)
@@ -194,20 +230,19 @@ end
 --- Writes text to a relative X,Y position in the widget.
 --- Relative X,Y as in offset by + 1 on the X axis because of the left/right walls
 -- @param text
--- @param x
--- @param y
+-- @tparam int x local X
+-- @tparam int y local y
 function widget:writeTextToLocalXY(text, x, y)
+  expect(2, x, "number")
+  expect(3, y, "number")
   self.device.setCursorPos(x + 1, y)
   self:setInternalColor()
   self.device.write(text)
   self:setPreviousColor()
 end
 
-function widget.debugStop()
-  peripheral.call("back", "stop")
-end
-
 --- This function should be overwritten to allow changing conditions as if they were set in the new() function
+-- @tparam[opt] table p
 function widget:updateParameters(p)
   self:_applyParameters(p)
 end
@@ -218,10 +253,11 @@ function widget:getValue()
 end
 
 --- Create a new widget object.
--- @param o original object, usually set to `nil`
--- @param pos table {x,y}
--- @param size table {width, height}
--- @return widget object
+-- @tparam table o original object
+-- @tparam table pos table {x: int,y: int}
+-- @tparam table size table {width: int, height: int}
+-- @tparam[opt] table p
+-- @treturn table widget object
 function widget:new(o, pos, size, p)
   o = o or {}
   setmetatable(o, self)
@@ -235,6 +271,8 @@ function widget:new(o, pos, size, p)
   return o
 end
 
+--- Apply parameters to this widget
+-- @tparam[opt] table p
 function widget:_applyParameters(p)
   if type(p) == "table" then
     for key, value in pairs(p) do

@@ -1,12 +1,21 @@
+--- A text displaying widget.
+-- Text is autowrapped to fit into the area of the widget.
+-- Inherits from the widget object.
+-- @see widget
+-- @module text
 local widget = require("gui.widget")
 
+--- Defaults for the text widget
+-- @table text
 local text = {
-  type = "text",
-  selectable = false,
+  type = "text",-- string, used for gui packing/unpacking (must match filename without extension!)
+  selectable = false, -- bool, disable interaction with this widget
 }
+-- Setup inheritence
 setmetatable(text, widget)
 text.__index = text
 
+--- Draw the text widget.
 function text:draw()
   self:clear()
   self:drawFrame()
@@ -15,6 +24,7 @@ function text:draw()
     self:writeTextToLocalXY(preppedString, 1, self.textArea[2] + 1 - i)
   end
 end
+
 
 function text:scrollTextArray()
   for x = self.textArea[2] + 1, 2, -1 do
@@ -32,6 +42,9 @@ function text:formatStringToFitWidth(str)
   end
 end
 
+--- Update size of text widget
+-- @tparam int width
+-- @tparam int height
 function text:updateSize(width, height)
   widget.updateSize(self, width, height)
   self.textArea = { self.size[1] - 2, self.size[2] }
@@ -41,18 +54,26 @@ function text:updateSize(width, height)
   self:formatStringToFitWidth(self.string)
 end
 
+--- Update parameters
+-- @tparam string string
+-- @tparam[opt] table p
 function text:updateParameters(string, p)
   self.string = string
   self:formatStringToFitWidth(self.string)
   self:_applyParameters(p)
 end
 
-function text:new(o, pos, size, string, p)
+--- Create a new text widget.
+-- @tparam table pos {x,y}
+-- @tparam table size {width,height}
+-- @tparam string string
+-- @tparam[opt] table p
+-- @treturn table text object
+function text:new(pos, size, string, p)
   o = o or {}
   o = widget:new(o, pos, size, p)
   setmetatable(o, self)
   self.__index = self
-  -- TODO implement this in all the prior widgets and stuff I made so they all call widget's new function first. so that widget can handle all the default/common parameters
   o.value = {}
   o.textArea = { o.size[1] - 2, o.size[2] }
   for i = 1, o.textArea[2] do

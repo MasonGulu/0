@@ -64,7 +64,7 @@ function page:draw()
 
   self.device.setCursorPos(1 + self.cursorPos[1], 1 + self.cursorPos[2])
   local tmpIndex = self.cursorPos[1]
-  local tmpString = string.sub(self.pageText[self.cursorPos[2] + self.viewLine - 1], tmpIndex, tmpIndex)
+  tmpString = string.sub(self.pageText[self.cursorPos[2] + self.viewLine - 1], tmpIndex, tmpIndex)
   local tmpCol = string.sub(self.pageColor[self.cursorPos[2] + self.viewLine - 1], tmpIndex, tmpIndex)
   local tmpFG = "f"
   if tmpCol == "f" or tmpCol == "7" then

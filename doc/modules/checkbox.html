@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/button.html">button</a></li>
+  <li><strong>checkbox</strong></li>
+  <li><a href="../modules/divider.html">divider</a></li>
+  <li><a href="../modules/listbox.html">listbox</a></li>
+  <li><a href="../modules/printoutput.html">printoutput</a></li>
+  <li><a href="../modules/scrollinput.html">scrollinput</a></li>
+  <li><a href="../modules/text.html">text</a></li>
+  <li><a href="../modules/textinput.html">textinput</a></li>
+  <li><a href="../modules/widget.html">widget</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>checkbox</code></h1>
+<p>A simple checkbox widget.</p>
+<p>
+ Inherits from the widget object.</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/widget.html#">widget</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#draw">draw ()</a></td>
+	<td class="summary">Draw the checkbox widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleMouseClick">handleMouseClick (mouseButton, mouseX, mouseY)</a></td>
+	<td class="summary">Handle mouse_click events.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleKey">handleKey (keycode, held)</a></td>
+	<td class="summary">Handle key event</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#new">new (pos, size, text[, p])</a></td>
+	<td class="summary">Create a new button widget.</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#checkbox">checkbox</a></td>
+	<td class="summary">Defaults for the button widget</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "draw"></a>
+    <strong>draw ()</strong>
+    </dt>
+    <dd>
+    Draw the checkbox widget.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleMouseClick"></a>
+    <strong>handleMouseClick (mouseButton, mouseX, mouseY)</strong>
+    </dt>
+    <dd>
+    Handle mouse_click events.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mouseButton</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">mouseX</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">mouseY</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        enable_events and state was changed
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleKey"></a>
+    <strong>handleKey (keycode, held)</strong>
+    </dt>
+    <dd>
+    Handle key event
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keycode</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">held</span>
+            <span class="types"><span class="type">bool</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        space is pressed (state is changed) and enable_events
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "new"></a>
+    <strong>new (pos, size, text[, p])</strong>
+    </dt>
+    <dd>
+    Create a new button widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">pos</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         {x,y}
+        </li>
+        <li><span class="parameter">size</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         {width,height}
+        </li>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+         single line string to display
+        </li>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        checkbox
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "checkbox"></a>
+    <strong>checkbox</strong>
+    </dt>
+    <dd>
+    Defaults for the button widget
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">type</span>
+        string, used for gui packing/unpacking (must match filename without extension!)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-06-16 19:03:53 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

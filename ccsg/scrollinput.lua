@@ -1,12 +1,20 @@
+--- A compact single-line widget that allows you to select a single element from a list.
+-- Inherits from the widget object.
+-- @see widget
+-- @module scrollinput
 local widget = require("gui.widget")
 
+--- Defaults for the scrollinput widget
+-- @table scrollinput
 local scrollinput = {
-  type = "scrollinput",
-  enable_events = true
+  type = "scrollinput", -- string, used for gui packing/unpacking (must match filename without extension!)
+  enable_events = true -- bool, events are enabled by default for scrollinputs
 }
+-- Setup inheritence
 setmetatable(scrollinput, widget)
 scrollinput.__index = scrollinput
 
+--- Draw the scrollinput widget.
 function scrollinput:draw()
   self:clear()
   self:drawFrame()
@@ -15,6 +23,11 @@ function scrollinput:draw()
   self:writeTextToLocalXY(string.char(18), 1, 1)
 end
 
+--- Handle mouse_click events
+-- @tparam number mouseButton
+-- @tparam number mouseX
+-- @tparam number mouseY
+-- @treturn boolean mouseclick is on scroll button and enable_events
 function scrollinput:handleMouseClick(mouseButton, mouseX, mouseY)
   local x, y = self:convertGlobalXYToLocalXY(mouseX, mouseY)
   if x > 0 and y > 0 then
@@ -29,40 +42,57 @@ function scrollinput:handleMouseClick(mouseButton, mouseX, mouseY)
         self.value = self.length
       end
     end
+    return self.enable_events
   end
-  return self.enable_events
+  return false
 end
 
-function scrollinput:handleMouseScroll(scrollDirection, mouseX, mouseY)
-  if scrollDirection == 1 then
+--- Handle mousescroll events
+-- @tparam int direction
+-- @tparam int mouseX global X
+-- @tparam int mouseY global Y
+-- @treturn bool value has changed and enable_events
+function scrollinput:handleMouseScroll(direction, mouseX, mouseY)
+  if direction == 1 then
     self.value = self.value + 1
     if self.value > self.length then
       self.value = 1
     end
-  elseif scrollDirection == -1 then
+    return self.enable_events
+  elseif direction == -1 then
     self.value = self.value - 1
     if self.value < 1 then
       self.value = self.length
     end
+    return self.enable_events
   end
-  return self.enable_events
+  return false
 end
 
+--- Handle key events
+-- @tparam int key
+-- @tparam int held
+-- @treturn bool selected value changed and enable_events
 function scrollinput:handleKey(key, held)
   if key == keys.down then
     self.value = self.value + 1
     if self.value > self.length then
       self.value = 1
     end
+    return self.enable_events
   elseif key == keys.up then
     self.value = self.value - 1
     if self.value < 1 then
       self.value = self.length
     end
+    return self.enable_events
   end
-  return self.enable_events
+  return false
 end
 
+--- Update parameters of this scrollinput widget
+-- @tparam table options
+-- @tparam[opt] table p
 function scrollinput:updateParameters(options, p)
   self.value = 1
   self.options = options
@@ -77,7 +107,6 @@ function scrollinput:new(o, pos, size, options, p)
   o = widget:new(o, pos, size, p)
   setmetatable(o, self)
   self.__index = self
-  -- TODO implement this in all the prior widgets and stuff I made so they all call widget's new function first. so that widget can handle all the default/common parameters
   o.value = 1
   o.options = options
   o.length = #o.options

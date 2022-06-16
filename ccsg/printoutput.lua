@@ -1,12 +1,19 @@
+--- A widget that allows you to print data out.
+-- @see widget
+-- @module printoutput
 local widget = require("gui.widget")
 
+--- Defaults for the printoutput widget
+-- @table printoutput
 local printoutput = {
-  type = "printoutput",
-  selectable = false,
+  type = "printoutput", -- string, used for gui packing/unpacking (must match filename without extension!)
+  selectable = false, -- bool, disable interaction with this widget
 }
+-- Setup inheritence
 setmetatable(printoutput, widget)
 printoutput.__index = printoutput
 
+--- Draw the printoutput widget.
 function printoutput:draw()
   self:clear()
   self:drawFrame()
@@ -19,6 +26,7 @@ function printoutput:draw()
   end
 end
 
+--- Scroll the printoutput widget.
 function printoutput:scroll()
   for x = #self.value + 1, 2, -1 do
     self.value[x] = self.value[x - 1]
@@ -26,8 +34,14 @@ function printoutput:scroll()
   self.value[1] = ""
 end
 
-function printoutput:print(str)
-  str = tostring(str)
+--- Print whatever is provided to the printoutput widget.
+-- Scrolls before printing
+-- @tparam any ...
+function printoutput:print(...)
+  str = ""
+  for k, v in pairs(arg) do
+    str = str.." "..tostring(k)
+  end
   self:scroll()
   self.value[1] = str:sub(1, self.textArea[1])
   if str:len() > self.textArea[1] then
@@ -35,17 +49,24 @@ function printoutput:print(str)
   end
 end
 
+--- Update size
+-- @tparam int width
+-- @tparam int height
 function printoutput:updateSize(width, height)
   self.size = { width, height }
   self.textArea = { self.size[1] - 2, self.size[2] - 2 }
 end
 
-function printoutput:new(o, pos, size, p)
+--- Create a new printoutput widget.
+-- @tparam table pos {x,y}
+-- @tparam table size {width,height}
+-- @tparam[opt] table p
+-- @treturn table printoutput
+function printoutput:new(pos, size, p)
   o = o or {}
   o = widget:new(o, pos, size, p)
   setmetatable(o, self)
   self.__index = self
-  -- TODO implement this in all the prior widgets and stuff I made so they all call widget's new function first. so that widget can handle all the default/common parameters
   o.value = {}
   o.textArea = { o.size[1] - 2, o.size[2] }
   for i = 1, o.textArea[2] do

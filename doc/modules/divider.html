@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/button.html">button</a></li>
+  <li><a href="../modules/checkbox.html">checkbox</a></li>
+  <li><strong>divider</strong></li>
+  <li><a href="../modules/listbox.html">listbox</a></li>
+  <li><a href="../modules/printoutput.html">printoutput</a></li>
+  <li><a href="../modules/scrollinput.html">scrollinput</a></li>
+  <li><a href="../modules/text.html">text</a></li>
+  <li><a href="../modules/textinput.html">textinput</a></li>
+  <li><a href="../modules/widget.html">widget</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>divider</code></h1>
+<p>A visual divider that has no additional functionality
+ Inherits from the widget object.</p>
+<p></p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/widget.html#">widget</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#draw">draw ()</a></td>
+	<td class="summary">Draw the divider widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateSize">updateSize (width, height)</a></td>
+	<td class="summary">Function called to update the size of the widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#new">new (pos, size[, p])</a></td>
+	<td class="summary">Create a new divider widget.</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#button">button</a></td>
+	<td class="summary">Defaults for the divider widget</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "draw"></a>
+    <strong>draw ()</strong>
+    </dt>
+    <dd>
+    Draw the divider widget.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateSize"></a>
+    <strong>updateSize (width, height)</strong>
+    </dt>
+    <dd>
+    Function called to update the size of the widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "new"></a>
+    <strong>new (pos, size[, p])</strong>
+    </dt>
+    <dd>
+    Create a new divider widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">pos</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         {x,y}
+        </li>
+        <li><span class="parameter">size</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         {width,height}
+        </li>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        divider
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "button"></a>
+    <strong>button</strong>
+    </dt>
+    <dd>
+    Defaults for the divider widget
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">type</span>
+        string, used for gui packing/unpacking (must match filename without extension!)
+        </li>
+        <li><span class="parameter">selectable</span>
+        bool, disable interaction with this widget.
+        </li>
+        <li><span class="parameter">modifyWalls</span>
+        bool, whether to modify the walls from the default
+        </li>
+        <li><span class="parameter">top</span>
+        bool, whether this divider is the top (requires modifyWalls)
+        </li>
+        <li><span class="parameter">bottom</span>
+        bool, whether this divider is the bottom (requires modifyWalls)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-06-16 19:03:53 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

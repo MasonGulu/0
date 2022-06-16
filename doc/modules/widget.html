@@ -1,0 +1,890 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/button.html">button</a></li>
+  <li><a href="../modules/checkbox.html">checkbox</a></li>
+  <li><a href="../modules/divider.html">divider</a></li>
+  <li><a href="../modules/listbox.html">listbox</a></li>
+  <li><a href="../modules/printoutput.html">printoutput</a></li>
+  <li><a href="../modules/scrollinput.html">scrollinput</a></li>
+  <li><a href="../modules/text.html">text</a></li>
+  <li><a href="../modules/textinput.html">textinput</a></li>
+  <li><strong>widget</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>widget</code></h1>
+<p>The base widget object.</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#_drawCharacterVertically">_drawCharacterVertically (char, x, height)</a></td>
+	<td class="summary">Draw a character repeated vertically</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#drawFrame">drawFrame ()</a></td>
+	<td class="summary">Draw the frame of the widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#draw">draw ()</a></td>
+	<td class="summary">Draw the internal area of the widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#clear">clear (FG, BG)</a></td>
+	<td class="summary">Clear the internal area of the widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#convertGlobalXYToLocalXY">convertGlobalXYToLocalXY (x, y)</a></td>
+	<td class="summary">Convert from device X,Y space to local X,Y space with 1,1 being the top left corner of the widget (inside the frame!)</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#convertLocalXYToGlobalXY">convertLocalXYToGlobalXY (x, y)</a></td>
+	<td class="summary">Convert from local X,Y space to device X,Y space</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setFocus">setFocus (focus)</a></td>
+	<td class="summary">Set the focus state of the widget, basically just sets the object's focused flag and draws the corners with the corrosponding characters.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleMouseClick">handleMouseClick (mouseButton, mouseX, mouseY)</a></td>
+	<td class="summary">Event handler function called when a mouse_click event occurs on the widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleKey">handleKey (keycode, held)</a></td>
+	<td class="summary">Event handler function called when a key event occurs with the widget focused.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleMouseScroll">handleMouseScroll (direction, mouseX, mouseY)</a></td>
+	<td class="summary">Event handler function called when a mouse_scroll event occurs with the widget focused</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handlePaste">handlePaste (text)</a></td>
+	<td class="summary">Event handler function called when a paste event occurs with the widget focused</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleChar">handleChar (char)</a></td>
+	<td class="summary">Event handler function called when a char event occurs with the widget focused.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#otherEvent">otherEvent (e)</a></td>
+	<td class="summary">Event handler for any other events that aren't covered by the other handles</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updatePos">updatePos (x, y)</a></td>
+	<td class="summary">Function called to update the position of the widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateSize">updateSize (width, height)</a></td>
+	<td class="summary">Function called to update the size of the widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setInternalColor">setInternalColor ([invert[, FG[, BG]]])</a></td>
+	<td class="summary">Function to set the term colors according to the internal color theme
+ Remembers previous colors to allow reverting</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setFrameColor">setFrameColor ([invert])</a></td>
+	<td class="summary">Function to set the term colors according to the frame color theme
+ Remembers previous colors to allow reverting</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#setPreviousColor">setPreviousColor ()</a></td>
+	<td class="summary">Reverts colors to what they were previously</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#writeTextToLocalXY">writeTextToLocalXY (text, x, y)</a></td>
+	<td class="summary">Writes text to a relative X,Y position in the widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateParameters">updateParameters ([p])</a></td>
+	<td class="summary">This function should be overwritten to allow changing conditions as if they were set in the new() function</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getValue">getValue ()</a></td>
+	<td class="summary">This function returns the "value" of the widget</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#new">new (o, pos, size[, p])</a></td>
+	<td class="summary">Create a new widget object.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#_applyParameters">_applyParameters ([p])</a></td>
+	<td class="summary">Apply parameters to this widget</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#widget">widget</a></td>
+	<td class="summary">Default widget parameters</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#theme">theme</a></td>
+	<td class="summary">Default widget theme, table is contents of widget.theme</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "_drawCharacterVertically"></a>
+    <strong>_drawCharacterVertically (char, x, height)</strong>
+    </dt>
+    <dd>
+    Draw a character repeated vertically
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">char</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "drawFrame"></a>
+    <strong>drawFrame ()</strong>
+    </dt>
+    <dd>
+    Draw the frame of the widget.
+ Applies theme colors
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "draw"></a>
+    <strong>draw ()</strong>
+    </dt>
+    <dd>
+    Draw the internal area of the widget.
+ Applies theme colors and reverts.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "clear"></a>
+    <strong>clear (FG, BG)</strong>
+    </dt>
+    <dd>
+    Clear the internal area of the widget.
+ Applies theme colors and reverts.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">FG</span>
+
+        </li>
+        <li><span class="parameter">BG</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "convertGlobalXYToLocalXY"></a>
+    <strong>convertGlobalXYToLocalXY (x, y)</strong>
+    </dt>
+    <dd>
+    Convert from device X,Y space to local X,Y space with 1,1 being the top left corner of the widget (inside the frame!)
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         device X
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         device y
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">int</span></span>
+        local X</li>
+        <li>
+           <span class="types"><span class="type">int</span></span>
+        local Y</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "convertLocalXYToGlobalXY"></a>
+    <strong>convertLocalXYToGlobalXY (x, y)</strong>
+    </dt>
+    <dd>
+    Convert from local X,Y space to device X,Y space
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         local x
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         local y
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+           <span class="types"><span class="type">int</span></span>
+        device x</li>
+        <li>
+           <span class="types"><span class="type">int</span></span>
+        device y</li>
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setFocus"></a>
+    <strong>setFocus (focus)</strong>
+    </dt>
+    <dd>
+    Set the focus state of the widget, basically just sets the object's focused flag and draws the corners with the corrosponding characters.
+ Applies theme colors.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">focus</span>
+            <span class="types"><span class="type">bool</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleMouseClick"></a>
+    <strong>handleMouseClick (mouseButton, mouseX, mouseY)</strong>
+    </dt>
+    <dd>
+    Event handler function called when a mouse_click event occurs on the widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mouseButton</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">mouseX</span>
+            <span class="types"><span class="type">int</span></span>
+         global X
+        </li>
+        <li><span class="parameter">mouseY</span>
+            <span class="types"><span class="type">int</span></span>
+         global Y
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        this widget wants to notify an event occured
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleKey"></a>
+    <strong>handleKey (keycode, held)</strong>
+    </dt>
+    <dd>
+    Event handler function called when a key event occurs with the widget focused.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keycode</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">held</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        this widget wants to notify an event occured
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleMouseScroll"></a>
+    <strong>handleMouseScroll (direction, mouseX, mouseY)</strong>
+    </dt>
+    <dd>
+    Event handler function called when a mouse_scroll event occurs with the widget focused
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">direction</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">mouseX</span>
+            <span class="types"><span class="type">int</span></span>
+         global X
+        </li>
+        <li><span class="parameter">mouseY</span>
+            <span class="types"><span class="type">int</span></span>
+         global Y
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        this widget wants to notify an event occured
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handlePaste"></a>
+    <strong>handlePaste (text)</strong>
+    </dt>
+    <dd>
+    Event handler function called when a paste event occurs with the widget focused
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        this widget wants to notify an event occured
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleChar"></a>
+    <strong>handleChar (char)</strong>
+    </dt>
+    <dd>
+    Event handler function called when a char event occurs with the widget focused.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">char</span>
+            <span class="types"><span class="type">character</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        this widget wants to notify an event occured
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "otherEvent"></a>
+    <strong>otherEvent (e)</strong>
+    </dt>
+    <dd>
+    Event handler for any other events that aren't covered by the other handles
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">e</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         event table {os.pullEvent()}
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        this widget wants to notify an event occured
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updatePos"></a>
+    <strong>updatePos (x, y)</strong>
+    </dt>
+    <dd>
+    Function called to update the position of the widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateSize"></a>
+    <strong>updateSize (width, height)</strong>
+    </dt>
+    <dd>
+    Function called to update the size of the widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setInternalColor"></a>
+    <strong>setInternalColor ([invert[, FG[, BG]]])</strong>
+    </dt>
+    <dd>
+    Function to set the term colors according to the internal color theme
+ Remembers previous colors to allow reverting
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">invert</span>
+            <span class="types"><span class="type">bool</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">FG</span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">BG</span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setFrameColor"></a>
+    <strong>setFrameColor ([invert])</strong>
+    </dt>
+    <dd>
+    Function to set the term colors according to the frame color theme
+ Remembers previous colors to allow reverting
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">invert</span>
+            <span class="types"><span class="type">bool</span></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "setPreviousColor"></a>
+    <strong>setPreviousColor ()</strong>
+    </dt>
+    <dd>
+    Reverts colors to what they were previously
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "writeTextToLocalXY"></a>
+    <strong>writeTextToLocalXY (text, x, y)</strong>
+    </dt>
+    <dd>
+    Writes text to a relative X,Y position in the widget.
+ Relative X,Y as in offset by + 1 on the X axis because of the left/right walls
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+
+        </li>
+        <li><span class="parameter">x</span>
+            <span class="types"><span class="type">int</span></span>
+         local X
+        </li>
+        <li><span class="parameter">y</span>
+            <span class="types"><span class="type">int</span></span>
+         local y
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateParameters"></a>
+    <strong>updateParameters ([p])</strong>
+    </dt>
+    <dd>
+    This function should be overwritten to allow changing conditions as if they were set in the new() function
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getValue"></a>
+    <strong>getValue ()</strong>
+    </dt>
+    <dd>
+    This function returns the "value" of the widget
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "new"></a>
+    <strong>new (o, pos, size[, p])</strong>
+    </dt>
+    <dd>
+    Create a new widget object.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">o</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         original object
+        </li>
+        <li><span class="parameter">pos</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         table {x: int,y: int}
+        </li>
+        <li><span class="parameter">size</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         table {width: int, height: int}
+        </li>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        widget object
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "_applyParameters"></a>
+    <strong>_applyParameters ([p])</strong>
+    </dt>
+    <dd>
+    Apply parameters to this widget
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "widget"></a>
+    <strong>widget</strong>
+    </dt>
+    <dd>
+    Default widget parameters
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">focused</span>
+        bool, is the widget focused?
+        </li>
+        <li><span class="parameter">value</span>
+        String, the data contained in the widget, sometimes other types
+        </li>
+        <li><span class="parameter">enable_events</span>
+        TOOD, badly implemented at the moment
+        </li>
+        <li><span class="parameter">device</span>
+        Device the widget is displayed on, term by default
+        </li>
+        <li><span class="parameter">enable</span>
+        bool, render and process events
+        </li>
+        <li><span class="parameter">frame</span>
+        bool, draw frame around widget
+        </li>
+        <li><span class="parameter">selectable</span>
+        bool, should this object be selectable?
+        </li>
+        <li><span class="parameter">theme</span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "theme"></a>
+    <strong>theme</strong>
+    </dt>
+    <dd>
+    Default widget theme, table is contents of widget.theme
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">wallLeft</span>
+        char, character used for left side vertical widget walls
+        </li>
+        <li><span class="parameter">wallRight</span>
+        char, character used for right side vertical widget walls
+        </li>
+        <li><span class="parameter">wallLeftInvert</span>
+        should fg/bg colors be swapped for wallLeft
+        </li>
+        <li><span class="parameter">wallRightInvert</span>
+        should fg/bg colors be swapped for wallRight
+        </li>
+        <li><span class="parameter">wallLeftFocused</span>
+        char, character used for left side widget walls when focused
+        </li>
+        <li><span class="parameter">wallRightFocused</span>
+        char, character used for right side widget walls when focused
+        </li>
+        <li><span class="parameter">wallLeftFocusedInvert</span>
+        should fg/bg colors be swapped for wallLeft
+        </li>
+        <li><span class="parameter">wallRightFocusedInvert</span>
+        should fg/bg colors be swapped for wallRight
+        </li>
+        <li><span class="parameter">frameFG</span>
+        color, text color of frame
+        </li>
+        <li><span class="parameter">frameBG</span>
+        color, background color of frame
+        </li>
+        <li><span class="parameter">internalFG</span>
+        color, text color of internal widget
+        </li>
+        <li><span class="parameter">internalBG</span>
+        color, text color of internal widget
+        </li>
+        <li><span class="parameter">internalInvert</span>
+        should fg/bg colors be swapped for internals
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-06-16 19:03:53 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -5,9 +5,12 @@
 
 local widget = require("gui.widget")
 
+--- Defaults for the button widget
+-- @table checkbox
 local checkbox = {
-  type = "checkbox"
+  type = "checkbox" -- string, used for gui packing/unpacking (must match filename without extension!)
 }
+-- Setup inheritence
 setmetatable(checkbox, widget)
 checkbox.__index = checkbox
 
@@ -27,34 +30,42 @@ function checkbox:draw()
 end
 
 --- Handle mouse_click events.
--- @return enable_events, false by default
+-- @tparam number mouseButton
+-- @tparam number mouseX
+-- @tparam number mouseY
+-- @treturn boolean enable_events and state was changed
 function checkbox:handleMouseClick(mouseButton, mouseX, mouseY)
   local x, y = self:convertGlobalXYToLocalXY(mouseX, mouseY)
   if x == 1 and y == 1 then
     self.value = not self.value
+    return self.enable_events
   end
-  return self.enable_events
+  return false
 end
 
+--- Handle key event
+-- @tparam int keycode
+-- @tparam bool held
+-- @treturn bool space is pressed (state is changed) and enable_events
 function checkbox:handleKey(keycode, held)
   if keycode == keys.space then
     self.value = not self.value
     return self.enable_events
   end
+  return false
 end
 
---- Create a new checkbox widget.
--- @param o original object, usually set to `nil`
--- @param pos table {x,y}
--- @param size table {width,height}
--- @param string String to display, single line.
--- @return checkbox widget
-function checkbox:new(o, pos, size, text, p)
+--- Create a new button widget.
+-- @tparam table pos {x,y}
+-- @tparam table size {width,height}
+-- @tparam string text single line string to display
+-- @tparam[opt] table p
+-- @treturn table checkbox
+function checkbox:new(pos, size, text, p)
   o = o or {}
   o = widget:new(o, pos, size, p)
   setmetatable(o, self)
   self.__index = self
-  -- TODO implement this in all the prior widgets and stuff I made so they all call widget's new function first. so that widget can handle all the default/common parameters
   o.text = text
   o:_applyParameters(p)
   return o

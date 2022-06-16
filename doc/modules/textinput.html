@@ -1,0 +1,319 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/button.html">button</a></li>
+  <li><a href="../modules/checkbox.html">checkbox</a></li>
+  <li><a href="../modules/divider.html">divider</a></li>
+  <li><a href="../modules/listbox.html">listbox</a></li>
+  <li><a href="../modules/printoutput.html">printoutput</a></li>
+  <li><a href="../modules/scrollinput.html">scrollinput</a></li>
+  <li><a href="../modules/text.html">text</a></li>
+  <li><strong>textinput</strong></li>
+  <li><a href="../modules/widget.html">widget</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>textinput</code></h1>
+<p>A textinput widget.</p>
+<p>
+ value is the text input, if in numOnly then the value is converted to a number first.
+ Inherits from the widget object.</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/widget.html#">widget</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#draw">draw ()</a></td>
+	<td class="summary">Draw the textinput widget</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleKey">handleKey (keycode, held)</a></td>
+	<td class="summary">Handle key events</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleChar">handleChar (char)</a></td>
+	<td class="summary">Handle char events</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateSize">updateSize (width, height)</a></td>
+	<td class="summary">Update size of widget</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#getValue">getValue ()</a></td>
+	<td class="summary">Get textinput's value</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#new">new (pos, size[, p])</a></td>
+	<td class="summary">Create a new textinput widget</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#textinput">textinput</a></td>
+	<td class="summary">Defaults for the textinput widget</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "draw"></a>
+    <strong>draw ()</strong>
+    </dt>
+    <dd>
+    Draw the textinput widget
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleKey"></a>
+    <strong>handleKey (keycode, held)</strong>
+    </dt>
+    <dd>
+    Handle key events
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">keycode</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">held</span>
+            <span class="types"><span class="type">bool</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        enter is pressed and enable_events
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleChar"></a>
+    <strong>handleChar (char)</strong>
+    </dt>
+    <dd>
+    Handle char events
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">char</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        false
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateSize"></a>
+    <strong>updateSize (width, height)</strong>
+    </dt>
+    <dd>
+    Update size of widget
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "getValue"></a>
+    <strong>getValue ()</strong>
+    </dt>
+    <dd>
+    Get textinput's value
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+        !numOnly
+    </ol>
+     <h3>Or</h3>
+    <ol>
+
+           <span class="types"><span class="type">number</span></span>
+        numOnly
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "new"></a>
+    <strong>new (pos, size[, p])</strong>
+    </dt>
+    <dd>
+    Create a new textinput widget
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">pos</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         {x,y}
+        </li>
+        <li><span class="parameter">size</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         {width,height}
+        </li>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        textinput
+    </ol>
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "textinput"></a>
+    <strong>textinput</strong>
+    </dt>
+    <dd>
+    Defaults for the textinput widget
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">type</span>
+        string, used for gui packing/unpacking (must match filename without extension!)
+        </li>
+        <li><span class="parameter">default</span>
+        number, default value if numOnly textinput is empty
+        </li>
+        <li><span class="parameter">numOnly</span>
+        bool, only accept numbers
+        </li>
+        <li><span class="parameter">hasDecimal</span>
+        bool, internal value but if set to true can prevent users from inputing non-integer numbers
+        </li>
+        <li><span class="parameter">hideInput</span>
+        bool, whether to hide the input or not
+        </li>
+        <li><span class="parameter">enable_events</span>
+        bool, events are enabled by default
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-06-16 19:03:53 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

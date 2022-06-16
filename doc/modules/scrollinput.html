@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+<li><a href="#Tables">Tables</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/button.html">button</a></li>
+  <li><a href="../modules/checkbox.html">checkbox</a></li>
+  <li><a href="../modules/divider.html">divider</a></li>
+  <li><a href="../modules/listbox.html">listbox</a></li>
+  <li><a href="../modules/printoutput.html">printoutput</a></li>
+  <li><strong>scrollinput</strong></li>
+  <li><a href="../modules/text.html">text</a></li>
+  <li><a href="../modules/textinput.html">textinput</a></li>
+  <li><a href="../modules/widget.html">widget</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>scrollinput</code></h1>
+<p>A compact single-line widget that allows you to select a single element from a list.</p>
+<p>
+ Inherits from the widget object.</p>
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/widget.html#">widget</a>
+    </ul>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#draw">draw ()</a></td>
+	<td class="summary">Draw the scrollinput widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleMouseClick">handleMouseClick (mouseButton, mouseX, mouseY)</a></td>
+	<td class="summary">Handle mouse_click events</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleMouseScroll">handleMouseScroll (direction, mouseX, mouseY)</a></td>
+	<td class="summary">Handle mousescroll events</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#handleKey">handleKey (key, held)</a></td>
+	<td class="summary">Handle key events</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#updateParameters">updateParameters (options[, p])</a></td>
+	<td class="summary">Update parameters of this scrollinput widget</td>
+	</tr>
+</table>
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#scrollinput">scrollinput</a></td>
+	<td class="summary">Defaults for the scrollinput widget</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "draw"></a>
+    <strong>draw ()</strong>
+    </dt>
+    <dd>
+    Draw the scrollinput widget.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleMouseClick"></a>
+    <strong>handleMouseClick (mouseButton, mouseX, mouseY)</strong>
+    </dt>
+    <dd>
+    Handle mouse_click events
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">mouseButton</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">mouseX</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">mouseY</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        mouseclick is on scroll button and enable_events
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleMouseScroll"></a>
+    <strong>handleMouseScroll (direction, mouseX, mouseY)</strong>
+    </dt>
+    <dd>
+    Handle mousescroll events
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">direction</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">mouseX</span>
+            <span class="types"><span class="type">int</span></span>
+         global X
+        </li>
+        <li><span class="parameter">mouseY</span>
+            <span class="types"><span class="type">int</span></span>
+         global Y
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        value has changed and enable_events
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "handleKey"></a>
+    <strong>handleKey (key, held)</strong>
+    </dt>
+    <dd>
+    Handle key events
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+        <li><span class="parameter">held</span>
+            <span class="types"><span class="type">int</span></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">bool</span></span>
+        selected value changed and enable_events
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "updateParameters"></a>
+    <strong>updateParameters (options[, p])</strong>
+    </dt>
+    <dd>
+    Update parameters of this scrollinput widget
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">options</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+        </li>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "scrollinput"></a>
+    <strong>scrollinput</strong>
+    </dt>
+    <dd>
+    Defaults for the scrollinput widget
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">type</span>
+        string, used for gui packing/unpacking (must match filename without extension!)
+        </li>
+        <li><span class="parameter">enable_events</span>
+        bool, events are enabled by default for scrollinputs
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-06-16 19:03:53 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

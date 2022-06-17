@@ -8,8 +8,8 @@ local expect = require("cc.expect")
 local widget = {
   focused = false, -- bool, is the widget focused?
   value = "", -- String, the data contained in the widget, sometimes other types
-  enable_events = false, -- TOOD, badly implemented at the moment
-  device = term, -- Device the widget is displayed on, term by default
+  enable_events = false, -- bool, if this widget should throw events
+  device = term, -- Device the widget is displayed on, not implemented currently. do not change.
   enable = true, -- bool, render and process events
   frame = true, -- bool, draw frame around widget
   selectable = true, -- bool, should this object be selectable?
@@ -35,6 +35,18 @@ widget.theme = {
   internalFG = colors.white, -- color, text color of internal widget
   internalBG = colors.black, -- color, text color of internal widget
   internalInvert = false, -- should fg/bg colors be swapped for internals
+  topRightWall = string.char(147), -- char, character used for divider top right wall
+  invertTopRight = true, -- bool, invert divider top right wall fg/bg
+  topLeftWall = string.char(156), -- char, character used for divider top left wall
+  invertTopLeft = false, -- bool, invert divider top left wall fg/bg
+  bottomRightWall = string.char(142), -- char, character used for divider bottom right wall
+  invertBottomRight = false, -- bool, invert divider bottom right wall fg/bg
+  bottomLeftWall = string.char(141), -- char, character used for divider bottom left wall
+  invertBottomLeft = false, -- bool, invert divider bottom left wall fg/bg
+  centerLeftWall = string.char(157), -- char, character used for divider center left wall
+  invertCenterLeft = false, -- bool, invert divider center left wall fg/bg
+  centerRightWall = string.char(145), -- char, character used for divider center right wall
+  invertCenterRight = true, -- bool, invert divider center right wall fg/bg
 }
 
 widget.theme.__index = widget.theme
@@ -267,6 +279,13 @@ function widget.new(o, pos, size, p)
   setmetatable(o.theme, widget.theme)
   o.device = window.create(term.current(), o.pos[1], o.pos[2], o.size[1], o.size[2])
   return o
+end
+
+--- Function called when updating the GUI theme
+-- @tparam table theme
+function widget:updateTheme(theme)
+  setmetatable(theme, widget.theme)
+  self.theme = theme
 end
 
 --- Apply parameters to this widget

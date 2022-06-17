@@ -22,7 +22,7 @@ function checkbox:draw()
     self:writeTextToLocalXY(string.char(7), 1, 1)
     -- closed checkbox
   else
-    self:writeTextToLocalXY(string.char(164), 1, 1)
+    self:writeTextToLocalXY(string.char(186), 1, 1)
     -- open checkbox
   end
   local preppedString = self.text:sub(1, self.size[1] - 3)

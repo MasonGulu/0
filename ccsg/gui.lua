@@ -153,7 +153,7 @@ end
 -- @tparam table widgets widget table
 -- @tparam[opt] table parameters
 function gui.new(widgets, parameters)
-  o = o or {}
+  local o = {}
   setmetatable(o, gui)
   o.widgets = widgets
   o.selectableWidgetKeys = {}
@@ -177,7 +177,7 @@ function gui.new(widgets, parameters)
     end
     if parameters.theme then
       for key, value in pairs(o.widgets) do
-        value.theme = parameters.theme
+        value:updateTheme(parameters.theme)
       end
     end
   end

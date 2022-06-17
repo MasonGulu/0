@@ -5,28 +5,26 @@ local popup = {}
 
 --- Get input from the user
 -- @tparam string message
--- @tparam int width
+-- @tparam[opt] int width
 -- @return[1] false if the user cancelled
 -- @treturn[2] string input
 function popup.getInput(message, width)
   term.clear()
   local wWidth, wHeight = term.getSize()
   width = width or 25
-  local x = math.floor(wWidth / 2 - width / 2)
-  local y = math.floor(wHeight / 2) - 3
+
   local text = require("ccsg.text")
   local textinput = require("ccsg.textinput")
   local button = require("ccsg.button")
   local divider = require("ccsg.divider")
-  message = message or "Enter filename:"
   local win = gui.new(nil, {
-    divider.new({ x, y }, { width, 1 }, { top = true }),
-    text.new({ x, y + 1 }, { width, 1 }, message),
-    input = textinput.new({ x, y + 2 }, { width, 1 }),
-    cancelButton = button.new({ x, y + 3 }, { math.floor(width / 2), 1 }, "Cancel"),
-    submitButton = button.new({ x + math.ceil(width / 2), y + 3 }, { math.floor(width / 2), 1 }, "Submit"),
-    divider.new({ x, y + 4 }, { width, 1 }, { bottom = true })
-  })
+    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
+    text.new({ 1, 2 }, { width, 1 }, message),
+    input = textinput.new({ 1, 3 }, { width, 1 }),
+    cancelButton = button.new({ 1, 4 }, { math.floor(width / 2), 1 }, "Cancel"),
+    submitButton = button.new({ 1 + math.ceil(width / 2), 4 }, { math.floor(width / 2), 1 }, "Submit"),
+    divider.new({ 1, 5 }, { width, 1 }, { bottom = true })
+  }, {autofit=true})
   while true do
     local event, values = win:read()
     if event == "cancelButton" then
@@ -115,13 +113,12 @@ end
 -- @tparam[opt] string fileExtension i.e. ".bimg"
 -- @tparam[optchain] bool write warn before overwriting files
 -- @tparam[optchain] int width default 25
--- @tparam[optchain] int height default 5
+-- @tparam[optchain] int height default 5; height of listbox
 -- @return[1] false if user cancelled
 -- @treturn[2] string path
 function popup.fileBrowse(fileExtension, write, width, height)
   -- file extension is expected to contain dot ie ".scd"
   term.clear()
-  
   local wWidth, wHeight = term.getSize()
   width = width or 25
   height = height or 5
@@ -215,22 +212,25 @@ function popup.fileBrowse(fileExtension, write, width, height)
   end
 end
 
+--- Show a popup with some info on it
+-- @param message
+-- @param[opt] buttonLabel
+-- @tparam[optchain] int width
+-- @tparam[optchain] int height height of textbox
 function popup.info(message, buttonLabel, width, height)
   local wWidth, wHeight = term.getSize()
   width = width or 25
   height = height or 3
-  local x = math.floor(wWidth / 2 - width / 2)
-  local y = math.floor(wHeight / 2) - 3
   local text = require("ccsg.text")
   local button = require("ccsg.button")
   local divider = require("ccsg.divider")
   buttonLabel = buttonLabel or "Close"
   local win = gui.new(nil, {
-    divider.new({ x, y }, { width, 1 }, { top = true }),
-    text.new({ x, y + 1 }, { width, height }, message),
-    ackButton = button.new({ x, y + 1 + height }, { width, 1 }, buttonLabel),
-    divider.new({ x, y + 2 + height }, { width, 1 }, { bottom = true })
-  })
+    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
+    text.new({ 1, 2 }, { width, height }, message),
+    ackButton = button.new({ 1, 2 + height }, { width, 1 }, buttonLabel),
+    divider.new({ 1, 3 + height }, { width, 1 }, { bottom = true })
+  },{autofit=true})
   local event, values
   repeat
     event, values = win:read()
@@ -238,23 +238,27 @@ function popup.info(message, buttonLabel, width, height)
   term.clear()
 end
 
+--- Show a popup asking the user to confirm
+-- @param message
+-- @tparam[opt] int height
+-- @tparam[optchain] int width
+-- @treturn boolean user confirmed
 function popup.confirm(message, height, width)
   local wWidth, wHeight = term.getSize()
   width = width or 25
   height = height or 3
-  local x = math.floor(wWidth / 2 - width / 2)
-  local y = math.floor(wHeight / 2) - 3
+
   local buttonWidth = math.floor(width / 2)
   local text = require("ccsg.text")
   local button = require("ccsg.button")
   local divider = require("ccsg.divider")
   local win = gui.new(nil, {
-    divider.new({ x, y }, { width, 1 }, { top = true }),
-    text.new({ x, y + 1 }, { width, height }, message),
-    noButton = button.new({ x, y + 1 + height }, { buttonWidth, 1 }, "No"),
-    yesButton = button.new({ x + buttonWidth + 1, y + 1 + height }, { buttonWidth, 1 }, "Yes"),
-    divider.new({ x, y + height + 2 }, { width, 1 }, { bottom = true })
-  })
+    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
+    text.new({ 1, 2 }, { width, height }, message),
+    noButton = button.new({ 1, 2 + height }, { buttonWidth, 1 }, "No"),
+    yesButton = button.new({ 1 + buttonWidth + 1, 2 + height }, { buttonWidth, 1 }, "Yes"),
+    divider.new({ 1, 3 + height }, { width, 1 }, { bottom = true })
+  }, {autofit=true})
   local event, values
   repeat
     event, values = win:read()
@@ -263,14 +267,20 @@ function popup.confirm(message, height, width)
   return event == "yesButton"
 end
 
+--- Show a popup to edit a table.
+-- Each value in the table can be replaced with a value of the same type
+-- @tparam table T
+-- @param textString label
+-- @tparam[opt] int textHeight
+-- @tparam[optchain] int keyWidth
+-- @tparam[optchain] int valueWidth
+-- @treturn table modified T
 function popup.editT(T, textString, textHeight, keyWidth, valueWidth)
   keyWidth = keyWidth or 5
   valueWidth = valueWidth or 12
   textHeight = textHeight or 3
   local width = keyWidth + valueWidth
   local wWidth, wHeight = term.getSize()
-  local x = math.floor(wWidth / 2 - width / 2)
-  local y = math.floor(wHeight / 2 - (#T + textHeight + 6) / 2)
 
   local text = require("ccsg.text")
   local button = require("ccsg.button")
@@ -279,30 +289,30 @@ function popup.editT(T, textString, textHeight, keyWidth, valueWidth)
   local checkbox = require("ccsg.checkbox")
 
   local widgets = {
-    DIV1 = divider.new({ x, y }, { width, 1 }, { top = true }),
-    TXT1 = text.new({ x, y + 1 }, { width, textHeight }, textString),
-    DIV2 = divider.new({ x, y + textHeight + 1 }, { width, 1 })
+    DIV1 = divider.new({ 1, 1 }, { width, 1 }, { top = true }),
+    TXT1 = text.new({ 1, 2 }, { width, textHeight }, textString),
+    DIV2 = divider.new({ 1, textHeight + 2 }, { width, 1 })
   }
   local offset = textHeight + 2 -- offset from ypos
   for key, value in pairs(T) do
     if keyWidth > 0 then
-      widgets["DIV" .. tostring(offset)] = text.new({ x, y + offset }, { keyWidth, 1 }, key)
+      widgets["DIV" .. tostring(offset)] = text.new({ 1, 1 + offset }, { keyWidth, 1 }, key)
     end
     if type(value) == "boolean" then
-      widgets[key] = checkbox.new({ x + keyWidth, y + offset }, { valueWidth, 1 }, tostring(key), { value = value })
+      widgets[key] = checkbox.new({ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, tostring(key), { value = value })
     elseif type(value) == "number" then
-      widgets[key] = textinput.new({ x + keyWidth, y + offset }, { valueWidth, 1 }, { numOnly = true, value = value })
+      widgets[key] = textinput.new({ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, { numOnly = true, value = value })
     elseif type(value) == "table" then
-      widgets[key] = button.new({ x + keyWidth, y + offset }, { valueWidth, 1 }, "TABLE")
+      widgets[key] = button.new({ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, "TABLE")
     elseif type(value) == "string" then
-      widgets[key] = textinput.new({ x + keyWidth, y + offset }, { valueWidth, 1 }, { value = value })
+      widgets[key] = textinput.new({ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, { value = value })
     end
     offset = offset + 1
   end
-  widgets.DIV3 = divider.new({ x, y + offset }, { width, 1 })
-  widgets.ackButton = button.new({ x, y + offset + 1 }, { width, 1 }, "Submit")
-  widgets.DIV4 = divider.new({ x, y + offset + 2 }, { width, 1 }, { bottom = true })
-  local win = gui.new(nil, widgets, { devMode = false })
+  widgets.DIV3 = divider.new({ 1, 1 + offset }, { width, 1 })
+  widgets.ackButton = button.new({ 1, offset + 2 }, { width, 1 }, "Submit")
+  widgets.DIV4 = divider.new({ 1, offset + 3 }, { width, 1 }, { bottom = true })
+  local win = gui.new(nil, widgets, { autofit=true})
   local event, values
   repeat
     event, values = win:read()

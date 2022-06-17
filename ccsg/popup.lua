@@ -1,25 +1,31 @@
-local gui = require("gui.gui")
+--- A collection of premade popups for you to use in your program
+
+local gui = require("ccsg.gui")
 local popup = {}
 
-
+--- Get input from the user
+-- @tparam string message
+-- @tparam int width
+-- @return[1] false if the user cancelled
+-- @treturn[2] string input
 function popup.getInput(message, width)
   term.clear()
   local wWidth, wHeight = term.getSize()
   width = width or 25
   local x = math.floor(wWidth / 2 - width / 2)
   local y = math.floor(wHeight / 2) - 3
-  local text = require("gui.text")
-  local textinput = require("gui.textinput")
-  local button = require("gui.button")
-  local divider = require("gui.divider")
+  local text = require("ccsg.text")
+  local textinput = require("ccsg.textinput")
+  local button = require("ccsg.button")
+  local divider = require("ccsg.divider")
   message = message or "Enter filename:"
-  local win = gui:new(nil, {
-    divider:new(nil, { x, y }, { width, 1 }, { top = true }),
-    text:new(nil, { x, y + 1 }, { width, 1 }, message),
-    input = textinput:new(nil, { x, y + 2 }, { width, 1 }),
-    cancelButton = button:new(nil, { x, y + 3 }, { math.floor(width / 2), 1 }, "Cancel"),
-    submitButton = button:new(nil, { x + math.ceil(width / 2), y + 3 }, { math.floor(width / 2), 1 }, "Submit"),
-    divider:new(nil, { x, y + 4 }, { width, 1 }, { bottom = true })
+  local win = gui.new(nil, {
+    divider.new({ x, y }, { width, 1 }, { top = true }),
+    text.new({ x, y + 1 }, { width, 1 }, message),
+    input = textinput.new({ x, y + 2 }, { width, 1 }),
+    cancelButton = button.new({ x, y + 3 }, { math.floor(width / 2), 1 }, "Cancel"),
+    submitButton = button.new({ x + math.ceil(width / 2), y + 3 }, { math.floor(width / 2), 1 }, "Submit"),
+    divider.new({ x, y + 4 }, { width, 1 }, { bottom = true })
   })
   while true do
     local event, values = win:read()
@@ -33,26 +39,32 @@ function popup.getInput(message, width)
   end
 end
 
-function popup.pickFromList(message, list, p)
+--- Have the user select an element from a list of string capable objects
+-- @tparam string message
+-- @tparam table list
+-- @tparam[opt] int width
+-- @return[1] false if user cancelled
+-- @return[2] value from table selected
+-- @treturn[2] int index of table selected
+function popup.pickFromList(message, list, width)
   term.clear()
-  local text = require("gui.text")
-  local listbox = require("gui.listbox")
-  local button = require("gui.button")
-  local divider = require("gui.divider")
+  local text = require("ccsg.text")
+  local listbox = require("ccsg.listbox")
+  local button = require("ccsg.button")
+  local divider = require("ccsg.divider")
 
-  p = p or {}
-  local width = 20 or p.width
+  width = width or 20
 
   local buttonWidth = math.floor(width / 2)
 
-  local win = gui:new(nil, {
-    divider:new(nil, { 1, 1 }, { width, 1 }, { top = true }),
-    text:new(nil, { 1, 2 }, { width, 2 }, message),
-    listbox = listbox:new(nil, { 1, 4 }, { width, 5 }, list),
-    text:new(nil, { 1, 9 }, { width, 1 }, ""),
-    cancelButton = button:new(nil, { 1, 10 }, { buttonWidth, 1 }, "Cancel"),
-    submitButton = button:new(nil, { buttonWidth + 1, 10 }, { buttonWidth, 1 }, "Submit"),
-    divider:new(nil, { 1, 11 }, { width, 1 }, { bottom = true })
+  local win = gui.new(nil, {
+    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
+    text.new({ 1, 2 }, { width, 2 }, message),
+    listbox = listbox.new({ 1, 4 }, { width, 5 }, list),
+    text.new({ 1, 9 }, { width, 1 }, ""),
+    cancelButton = button.new({ 1, 10 }, { buttonWidth, 1 }, "Cancel"),
+    submitButton = button.new({ buttonWidth + 1, 10 }, { buttonWidth, 1 }, "Submit"),
+    divider.new({ 1, 11 }, { width, 1 }, { bottom = true })
   }, { autofit = true })
   while true do
     local winEvent, values = win:read()
@@ -87,10 +99,6 @@ local function getFoldersAndFiles(directory, fileExtension)
   return dirList, fileList
 end
 
-function popup.test(directory, fileExtension)
-  return getFoldersAndFiles(directory, fileExtension)
-end
-
 -- adapted from https://stackoverflow.com/a/15278426
 local function tableConcat(t1, t2)
   local t3 = {}
@@ -103,38 +111,51 @@ local function tableConcat(t1, t2)
   return t3
 end
 
+--- Show a file picker
+-- @tparam[opt] string fileExtension i.e. ".bimg"
+-- @tparam[optchain] bool write warn before overwriting files
+-- @tparam[optchain] int width default 25
+-- @tparam[optchain] int height default 5
+-- @return[1] false if user cancelled
+-- @treturn[2] string path
 function popup.fileBrowse(fileExtension, write, width, height)
   -- file extension is expected to contain dot ie ".scd"
   term.clear()
+  
   local wWidth, wHeight = term.getSize()
   width = width or 25
   height = height or 5
   if type(write) == "nil" then
     write = false
   end
-  local x = math.floor(wWidth / 2 - width / 2)
-  local y = math.floor(wHeight / 2) - 7
   local buttonWidth = math.floor(width / 2)
 
-  local text = require("gui.text")
-  local button = require("gui.button")
-  local listbox = require("gui.listbox")
-  local divider = require("gui.divider")
-  local textinput = require("gui.textinput")
-  local win = gui:new(nil, {
-    divider:new(nil, { x, y }, { width, 1 }, { top = true }),
-    directoryLabel = text:new(nil, { x, y + 1 }, { width - 9, 1 }, "/"),
-    directoryAddButton = button:new(nil, { x + width - 9, y + 1 }, { 9, 1 }, "New Dir"),
-    divider:new(nil, { x, y + 2 }, { width, 1 }),
-    directoryListbox = listbox:new(nil, { x, y + 3 }, { width, height }, { "example" }),
-    divider:new(nil, { x, y + height + 3 }, { width, 1 }),
-    filenameInput = textinput:new(nil, { x, y + height + 4 }, { width - 6, 1 }),
-    text:new(nil, { x + width - 6, y + height + 4 }, { 6, 1 }, fileExtension),
-    divider:new(nil, { x, y + height + 5 }, { width, 1 }),
-    cancelButton = button:new(nil, { x, y + height + 6 }, { buttonWidth + 1, 1 }, "Cancel"),
-    selectButton = button:new(nil, { x + buttonWidth + 1, y + height + 6 }, { buttonWidth, 1 }, "Submit"),
-    divider:new(nil, { x, y + height + 7 }, { width, 1 }, { bottom = true })
-  })
+  local text = require("ccsg.text")
+  local button = require("ccsg.button")
+  local listbox = require("ccsg.listbox")
+  local divider = require("ccsg.divider")
+  local textinput = require("ccsg.textinput")
+
+  local widgets = {
+    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
+    directoryLabel = text.new({ 1, 2 }, { width - 9, 1 }, "/"),
+    directoryAddButton = button.new({ width - 8, 2 }, { 9, 1 }, "New Dir"),
+    divider.new({ 1, 3 }, { width, 1 }),
+    directoryListbox = listbox.new({ 1, 4 }, { width, height }, { "example" }),
+    divider.new({ 1, height + 4 }, { width, 1 }),
+    divider.new({ 1, height + 6 }, { width, 1 }),
+    cancelButton = button.new({ 1, height + 7 }, { buttonWidth + 1, 1 }, "Cancel"),
+    selectButton = button.new({ buttonWidth + 2, height + 7 }, { buttonWidth, 1 }, "Submit"),
+    divider.new({ 1, 1 + height + 7 }, { width, 1 }, { bottom = true })
+  }
+  
+  if fileExtension then
+    widgets.filenameInput = textinput.new({ 1, height + 5 }, { width - 6, 1 })
+    widgets[#widgets+1] = text.new({ 1 + width - 6, height + 5 }, { 6, 1 }, fileExtension)
+  else
+    widgets.filenameInput = textinput.new({ 1, height + 5 }, { width, 1 })
+  end
+  local win = gui.new(nil, widgets, {autofit=true})
 
   local dirChanged = true -- whether to recalculate the current directory
   local currentDir = "/"
@@ -151,16 +172,26 @@ function popup.fileBrowse(fileExtension, write, width, height)
     local event, values = win:read()
     if event == "directoryListbox" then
       -- directory changed or file selected
-      if values.directoryListbox > #dirList then
+      if values.directoryListbox[1] > #dirList then
         -- this is a file
-        win.widgets.filenameInput:updateParameters({ value = string.sub(fileList[values.directoryListbox - #dirList], 1, -5) })
+        widgets.filenameInput:updateParameters({ value = fileList[values.directoryListbox[1] - #dirList]})
       else
         -- this is a folder
         dirChanged = true
-        currentDir = fs.combine(currentDir, dirList[values.directoryListbox])
+        currentDir = fs.combine(currentDir, dirList[values.directoryListbox[1]])
       end
+
     elseif event == "selectButton" then
-      local returnFilename = currentDir .. values.filenameInput .. fileExtension
+      local returnFilename
+      if fileExtension then
+        returnFilename = currentDir .. values.filenameInput
+        if (returnFilename:sub(-fileExtension:len(), -1) ~= fileExtension) then
+          returnFilename = returnFilename..fileExtension
+        end
+      else
+        returnFilename = currentDir .. values.filenameInput
+      end
+      
       if write and fs.exists(returnFilename) then
         -- give warning about overwriting a file
         if popup.confirm("Overwrite " .. returnFilename .. "?") then
@@ -169,14 +200,17 @@ function popup.fileBrowse(fileExtension, write, width, height)
       else
         return returnFilename
       end
+
     elseif event == "cancelButton" then
       return false
+
     elseif event == "directoryAddButton" then
       local newDirName = popup.getInput("Enter new directory name:", 27)
       if newDirName then
         fs.makeDir(fs.combine(currentDir, newDirName))
         dirChanged = true
       end
+
     end
   end
 end
@@ -187,15 +221,15 @@ function popup.info(message, buttonLabel, width, height)
   height = height or 3
   local x = math.floor(wWidth / 2 - width / 2)
   local y = math.floor(wHeight / 2) - 3
-  local text = require("gui.text")
-  local button = require("gui.button")
-  local divider = require("gui.divider")
+  local text = require("ccsg.text")
+  local button = require("ccsg.button")
+  local divider = require("ccsg.divider")
   buttonLabel = buttonLabel or "Close"
-  local win = gui:new(nil, {
-    divider:new(nil, { x, y }, { width, 1 }, { top = true }),
-    text:new(nil, { x, y + 1 }, { width, height }, message),
-    ackButton = button:new(nil, { x, y + 1 + height }, { width, 1 }, buttonLabel),
-    divider:new(nil, { x, y + 2 + height }, { width, 1 }, { bottom = true })
+  local win = gui.new(nil, {
+    divider.new({ x, y }, { width, 1 }, { top = true }),
+    text.new({ x, y + 1 }, { width, height }, message),
+    ackButton = button.new({ x, y + 1 + height }, { width, 1 }, buttonLabel),
+    divider.new({ x, y + 2 + height }, { width, 1 }, { bottom = true })
   })
   local event, values
   repeat
@@ -211,15 +245,15 @@ function popup.confirm(message, height, width)
   local x = math.floor(wWidth / 2 - width / 2)
   local y = math.floor(wHeight / 2) - 3
   local buttonWidth = math.floor(width / 2)
-  local text = require("gui.text")
-  local button = require("gui.button")
-  local divider = require("gui.divider")
-  local win = gui:new(nil, {
-    divider:new(nil, { x, y }, { width, 1 }, { top = true }),
-    text:new(nil, { x, y + 1 }, { width, height }, message),
-    noButton = button:new(nil, { x, y + 1 + height }, { buttonWidth, 1 }, "No"),
-    yesButton = button:new(nil, { x + buttonWidth + 1, y + 1 + height }, { buttonWidth, 1 }, "Yes"),
-    divider:new(nil, { x, y + height + 2 }, { width, 1 }, { bottom = true })
+  local text = require("ccsg.text")
+  local button = require("ccsg.button")
+  local divider = require("ccsg.divider")
+  local win = gui.new(nil, {
+    divider.new({ x, y }, { width, 1 }, { top = true }),
+    text.new({ x, y + 1 }, { width, height }, message),
+    noButton = button.new({ x, y + 1 + height }, { buttonWidth, 1 }, "No"),
+    yesButton = button.new({ x + buttonWidth + 1, y + 1 + height }, { buttonWidth, 1 }, "Yes"),
+    divider.new({ x, y + height + 2 }, { width, 1 }, { bottom = true })
   })
   local event, values
   repeat
@@ -238,37 +272,37 @@ function popup.editT(T, textString, textHeight, keyWidth, valueWidth)
   local x = math.floor(wWidth / 2 - width / 2)
   local y = math.floor(wHeight / 2 - (#T + textHeight + 6) / 2)
 
-  local text = require("gui.text")
-  local button = require("gui.button")
-  local divider = require("gui.divider")
-  local textinput = require("gui.textinput")
-  local checkbox = require("gui.checkbox")
+  local text = require("ccsg.text")
+  local button = require("ccsg.button")
+  local divider = require("ccsg.divider")
+  local textinput = require("ccsg.textinput")
+  local checkbox = require("ccsg.checkbox")
 
   local widgets = {
-    DIV1 = divider:new(nil, { x, y }, { width, 1 }, { top = true }),
-    TXT1 = text:new(nil, { x, y + 1 }, { width, textHeight }, textString),
-    DIV2 = divider:new(nil, { x, y + textHeight + 1 }, { width, 1 })
+    DIV1 = divider.new({ x, y }, { width, 1 }, { top = true }),
+    TXT1 = text.new({ x, y + 1 }, { width, textHeight }, textString),
+    DIV2 = divider.new({ x, y + textHeight + 1 }, { width, 1 })
   }
   local offset = textHeight + 2 -- offset from ypos
   for key, value in pairs(T) do
     if keyWidth > 0 then
-      widgets["DIV" .. tostring(offset)] = text:new(nil, { x, y + offset }, { keyWidth, 1 }, key)
+      widgets["DIV" .. tostring(offset)] = text.new({ x, y + offset }, { keyWidth, 1 }, key)
     end
     if type(value) == "boolean" then
-      widgets[key] = checkbox:new(nil, { x + keyWidth, y + offset }, { valueWidth, 1 }, tostring(key), { value = value })
+      widgets[key] = checkbox.new({ x + keyWidth, y + offset }, { valueWidth, 1 }, tostring(key), { value = value })
     elseif type(value) == "number" then
-      widgets[key] = textinput:new(nil, { x + keyWidth, y + offset }, { valueWidth, 1 }, { numOnly = true, value = value })
+      widgets[key] = textinput.new({ x + keyWidth, y + offset }, { valueWidth, 1 }, { numOnly = true, value = value })
     elseif type(value) == "table" then
-      widgets[key] = button:new(nil, { x + keyWidth, y + offset }, { valueWidth, 1 }, "TABLE")
+      widgets[key] = button.new({ x + keyWidth, y + offset }, { valueWidth, 1 }, "TABLE")
     elseif type(value) == "string" then
-      widgets[key] = textinput:new(nil, { x + keyWidth, y + offset }, { valueWidth, 1 }, { value = value })
+      widgets[key] = textinput.new({ x + keyWidth, y + offset }, { valueWidth, 1 }, { value = value })
     end
     offset = offset + 1
   end
-  widgets.DIV3 = divider:new(nil, { x, y + offset }, { width, 1 })
-  widgets.ackButton = button:new(nil, { x, y + offset + 1 }, { width, 1 }, "Submit")
-  widgets.DIV4 = divider:new(nil, { x, y + offset + 2 }, { width, 1 }, { bottom = true })
-  local win = gui:new(nil, widgets, { devMode = false })
+  widgets.DIV3 = divider.new({ x, y + offset }, { width, 1 })
+  widgets.ackButton = button.new({ x, y + offset + 1 }, { width, 1 }, "Submit")
+  widgets.DIV4 = divider.new({ x, y + offset + 2 }, { width, 1 }, { bottom = true })
+  local win = gui.new(nil, widgets, { devMode = false })
   local event, values
   repeat
     event, values = win:read()

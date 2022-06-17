@@ -3,9 +3,9 @@
 -- @see widget
 -- @module checkbox
 
-local widget = require("gui.widget")
+local widget = require("ccsg.widget")
 
---- Defaults for the button widget
+--- Defaults for the checkbox widget
 -- @table checkbox
 local checkbox = {
   type = "checkbox" -- string, used for gui packing/unpacking (must match filename without extension!)
@@ -55,17 +55,15 @@ function checkbox:handleKey(keycode, held)
   return false
 end
 
---- Create a new button widget.
+--- Create a new checkbox widget.
 -- @tparam table pos {x,y}
 -- @tparam table size {width,height}
 -- @tparam string text single line string to display
 -- @tparam[opt] table p
 -- @treturn table checkbox
-function checkbox:new(pos, size, text, p)
-  o = o or {}
-  o = widget:new(o, pos, size, p)
-  setmetatable(o, self)
-  self.__index = self
+function checkbox.new(pos, size, text, p)
+  local o = widget.new(nil, pos, size, p)
+  setmetatable(o, checkbox)
   o.text = text
   o:_applyParameters(p)
   return o

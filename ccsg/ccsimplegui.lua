@@ -1,4 +1,4 @@
-local gui = require("gui.gui")
+local gui = require("ccsg.gui")
 local expect = require("cc.expect")
 local CCSimpleGUI = {}
 
@@ -52,7 +52,7 @@ local function convertGUITableToWidgetTable(guiTable)
       end
       if type(requiredWidgets[vColumn.type]) == "nil" then
         -- this hasn't been included yet
-        requiredWidgets[vColumn.type] = require("gui." .. vColumn.type)
+        requiredWidgets[vColumn.type] = require("ccsg." .. vColumn.type)
       end
     end
   end
@@ -82,9 +82,9 @@ local function convertGUITableToWidgetTable(guiTable)
       vColumn.posArgs = vColumn.posArgs or {}
       local tmpWidget = nil
       if #vColumn.posArgs > 0 then
-        tmpWidget = requiredWidgets[vColumn.type]:new(nil, { widgetXPos, kRow }, { widgetWidth, vColumn.height }, table.unpack(vColumn.posArgs), vColumn.parameters)
+        tmpWidget = requiredWidgets[vColumn.type].new(nil, { widgetXPos, kRow }, { widgetWidth, vColumn.height }, table.unpack(vColumn.posArgs), vColumn.parameters)
       else
-        tmpWidget = requiredWidgets[vColumn.type]:new(nil, { widgetXPos, kRow }, { widgetWidth, vColumn.height }, vColumn.parameters)
+        tmpWidget = requiredWidgets[vColumn.type].new(nil, { widgetXPos, kRow }, { widgetWidth, vColumn.height }, vColumn.parameters)
       end
       if vColumn.key then
         widgets[vColumn.key] = tmpWidget
@@ -101,7 +101,7 @@ function CCSimpleGUI.new(guiTable)
   expect(1, guiTable, "table")
   guiTable.parameters = guiTable.parameters or {}
   guiTable.parameters.autofit = true
-  return gui:new(nil, convertGUITableToWidgetTable(guiTable), guiTable.parameters)
+  return gui.new(nil, convertGUITableToWidgetTable(guiTable), guiTable.parameters)
 end
 
 function CCSimpleGUI.text(text, width, height, parameters)

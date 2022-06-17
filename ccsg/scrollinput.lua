@@ -2,7 +2,7 @@
 -- Inherits from the widget object.
 -- @see widget
 -- @module scrollinput
-local widget = require("gui.widget")
+local widget = require("ccsg.widget")
 
 --- Defaults for the scrollinput widget
 -- @table scrollinput
@@ -100,13 +100,14 @@ function scrollinput:updateParameters(options, p)
   self:_applyParameters(p)
 end
 
--- Create a new scroll input
--- options: a 1d array of text options. Value = index of selected option
-function scrollinput:new(o, pos, size, options, p)
-  o = o or {}
-  o = widget:new(o, pos, size, p)
-  setmetatable(o, self)
-  self.__index = self
+--- Create a new scrollinput widget.
+-- @tparam table pos {x,y}
+-- @tparam table size {width,height}
+-- @tparam table options
+-- @tparam[opt] table p
+-- @treturn table scrollinput object
+function scrollinput.new(pos, size, options, p)
+  local o = widget.new(nil, pos, size, p)
   o.value = 1
   o.options = options
   o.length = #o.options

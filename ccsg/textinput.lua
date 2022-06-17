@@ -3,7 +3,7 @@
 -- Inherits from the widget object.
 -- @see widget
 -- @module textinput
-local widget = require("gui.widget")
+local widget = require("ccsg.widget")
 
 --- Defaults for the textinput widget
 -- @table textinput
@@ -91,16 +91,18 @@ function textinput:getValue()
   return self.value
 end
 
+-- function textinput:updateParameters(p)
+--   self:_applyParameters(p)
+-- end
+
 --- Create a new textinput widget
 -- @tparam table pos {x,y}
 -- @tparam table size {width,height}
 -- @tparam[opt] table p
 -- @treturn table textinput
-function textinput:new(pos, size, p)
-  o = o or {}
-  o = widget:new(o, pos, size, p)
-  setmetatable(o, self)
-  self.__index = self
+function textinput.new(pos, size, p)
+  local o = widget.new(nil, pos, size, p)
+  setmetatable(o, textinput)
   o.value = ""
   o.maxTextLen = o.size[1] - 3
   o.hasDecimal = false

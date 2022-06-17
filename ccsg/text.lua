@@ -3,7 +3,7 @@
 -- Inherits from the widget object.
 -- @see widget
 -- @module text
-local widget = require("gui.widget")
+local widget = require("ccsg.widget")
 
 --- Defaults for the text widget
 -- @table text
@@ -69,11 +69,9 @@ end
 -- @tparam string string
 -- @tparam[opt] table p
 -- @treturn table text object
-function text:new(pos, size, string, p)
-  o = o or {}
-  o = widget:new(o, pos, size, p)
-  setmetatable(o, self)
-  self.__index = self
+function text.new(pos, size, string, p)
+  local o = widget.new(nil, pos, size, p)
+  setmetatable(o, text)
   o.value = {}
   o.textArea = { o.size[1] - 2, o.size[2] }
   for i = 1, o.textArea[2] do

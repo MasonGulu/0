@@ -41,11 +41,11 @@
 <ul class="nowrap">
   <li><a href="../modules/button.html">button</a></li>
   <li><a href="../modules/checkbox.html">checkbox</a></li>
-  <li><strong>divider</strong></li>
+  <li><a href="../modules/divider.html">divider</a></li>
   <li><a href="../modules/listbox.html">listbox</a></li>
   <li><a href="../modules/popup.html">popup</a></li>
   <li><a href="../modules/printoutput.html">printoutput</a></li>
-  <li><a href="../modules/progressbar.html">progressbar</a></li>
+  <li><strong>progressbar</strong></li>
   <li><a href="../modules/scrollinput.html">scrollinput</a></li>
   <li><a href="../modules/text.html">text</a></li>
   <li><a href="../modules/textinput.html">textinput</a></li>
@@ -56,10 +56,10 @@
 
 <div id="content">
 
-<h1>Module <code>divider</code></h1>
-<p>A visual divider that has no additional functionality
+<h1>Module <code>progressbar</code></h1>
+<p>A progressbar widget.</p>
+<p>
  Inherits from the widget object.</p>
-<p></p>
     <h3>See also:</h3>
     <ul>
          <a href="../modules/widget.html#">widget</a>
@@ -70,22 +70,28 @@
 <table class="function_list">
 	<tr>
 	<td class="name" nowrap><a href="#draw">draw ()</a></td>
-	<td class="summary">Draw the divider widget.</td>
+	<td class="summary">Draw the progressbar widget.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#updateSize">updateSize (width, height)</a></td>
-	<td class="summary">Function called to update the size of the widget.</td>
+	<td class="name" nowrap><a href="#updateValue">updateValue (value)</a></td>
+	<td class="summary">Update value of progressbar
+ The progress bar will display value/maxValue</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#new">new (pos, size[, p])</a></td>
-	<td class="summary">Create a new divider widget.</td>
+	<td class="name" nowrap><a href="#updateParameters">updateParameters (maxValue[, p])</a></td>
+	<td class="summary">Update maxValue or parameters
+ current value is capped by maxValue</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#new">new (pos, size, maxValue[, p])</a></td>
+	<td class="summary">Create a new progressbar widget.</td>
 	</tr>
 </table>
 <h2><a href="#Tables">Tables</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#button">button</a></td>
-	<td class="summary">Defaults for the divider widget</td>
+	<td class="name" nowrap><a href="#progressbar">progressbar</a></td>
+	<td class="summary">Defaults for the progressbar widget</td>
 	</tr>
 </table>
 
@@ -101,7 +107,7 @@
     <strong>draw ()</strong>
     </dt>
     <dd>
-    Draw the divider widget.
+    Draw the progressbar widget.
 
 
 
@@ -111,21 +117,18 @@
 
 </dd>
     <dt>
-    <a name = "updateSize"></a>
-    <strong>updateSize (width, height)</strong>
+    <a name = "updateValue"></a>
+    <strong>updateValue (value)</strong>
     </dt>
     <dd>
-    Function called to update the size of the widget.
+    Update value of progressbar
+ The progress bar will display value/maxValue
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">width</span>
-            <span class="types"><span class="type">int</span></span>
-
-        </li>
-        <li><span class="parameter">height</span>
-            <span class="types"><span class="type">int</span></span>
+        <li><span class="parameter">value</span>
+            <span class="types"><span class="type">number</span></span>
 
         </li>
     </ul>
@@ -136,11 +139,38 @@
 
 </dd>
     <dt>
-    <a name = "new"></a>
-    <strong>new (pos, size[, p])</strong>
+    <a name = "updateParameters"></a>
+    <strong>updateParameters (maxValue[, p])</strong>
     </dt>
     <dd>
-    Create a new divider widget.
+    Update maxValue or parameters
+ current value is capped by maxValue
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">maxValue</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">p</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "new"></a>
+    <strong>new (pos, size, maxValue[, p])</strong>
+    </dt>
+    <dd>
+    Create a new progressbar widget.
 
 
     <h3>Parameters:</h3>
@@ -153,6 +183,10 @@
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
          {width,height}
         </li>
+        <li><span class="parameter">maxValue</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
         <li><span class="parameter">p</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
 
@@ -164,7 +198,7 @@
     <ol>
 
            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        divider
+        progressbar
     </ol>
 
 
@@ -176,11 +210,11 @@
 
     <dl class="function">
     <dt>
-    <a name = "button"></a>
-    <strong>button</strong>
+    <a name = "progressbar"></a>
+    <strong>progressbar</strong>
     </dt>
     <dd>
-    Defaults for the divider widget
+    Defaults for the progressbar widget
 
 
     <h3>Fields:</h3>
@@ -188,17 +222,14 @@
         <li><span class="parameter">type</span>
         string, used for gui packing/unpacking (must match filename without extension!)
         </li>
+        <li><span class="parameter">fullChar</span>
+        character to use for full segments
+        </li>
+        <li><span class="parameter">halfChar</span>
+        character to use for >half segments
+        </li>
         <li><span class="parameter">selectable</span>
-        bool, disable interaction with this widget.
-        </li>
-        <li><span class="parameter">modifyWalls</span>
-        bool, whether to modify the walls from the default
-        </li>
-        <li><span class="parameter">top</span>
-        bool, whether this divider is the top (requires modifyWalls)
-        </li>
-        <li><span class="parameter">bottom</span>
-        bool, whether this divider is the bottom (requires modifyWalls)
+
         </li>
     </ul>
 

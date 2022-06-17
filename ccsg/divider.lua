@@ -2,10 +2,10 @@
 -- Inherits from the widget object.
 -- @see widget
 -- @module divider
-local widget = require("gui.widget")
+local widget = require("ccsg.widget")
 
 --- Defaults for the divider widget
--- @table button
+-- @table divider
 local divider = {
   type = "divider", -- string, used for gui packing/unpacking (must match filename without extension!)
   selectable = false, -- bool, disable interaction with this widget.
@@ -65,11 +65,9 @@ end
 -- @tparam table size {width,height}
 -- @tparam[opt] table p
 -- @treturn table divider
-function divider:new(pos, size, p)
-  o = o or {}
-  o = widget:new(o, pos, size, p)
-  setmetatable(o, self)
-  self.__index = self
+function divider.new(pos, size, p)
+  local o = widget.new(nil, pos, size, p)
+  setmetatable(o, divider)
   o.value = string.rep(string.char(140), o.size[1] - 2)
   o:_applyParameters(p)
   return o

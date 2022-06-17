@@ -84,7 +84,7 @@ end
 --- Clear the internal area of the widget.
 -- Applies theme colors and reverts.
 function widget:clear(FG, BG)
-  self:setInternalColor(false, FG, BG)
+  self:setInternalColor(self.theme.internalInvert, FG, BG)
   self.device.clear()
   self:setPreviousColor()
 end
@@ -236,7 +236,7 @@ function widget:writeTextToLocalXY(text, x, y)
   expect(2, x, "number")
   expect(3, y, "number")
   self.device.setCursorPos(x + 1, y)
-  self:setInternalColor()
+  self:setInternalColor(self.theme.internalInvert)
   self.device.write(text)
   self:setPreviousColor()
 end
@@ -258,15 +258,13 @@ end
 -- @tparam table size table {width: int, height: int}
 -- @tparam[opt] table p
 -- @treturn table widget object
-function widget:new(o, pos, size, p)
+function widget.new(o, pos, size, p)
   o = o or {}
-  setmetatable(o, self)
-  self.__index = self
+  setmetatable(o, widget)
   o.pos = pos
   o.size = size
   o.theme = {}
-  setmetatable(o.theme, self.theme)
-  self.theme.__index = self.theme
+  setmetatable(o.theme, widget.theme)
   o.device = window.create(term.current(), o.pos[1], o.pos[2], o.size[1], o.size[2])
   return o
 end

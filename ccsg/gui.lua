@@ -5,6 +5,7 @@ local gui = {
   timeout = nil,
   autofit = false,
 }
+gui.__index = gui
 
 local errorBack = error
 function error(message, level)
@@ -59,6 +60,7 @@ function gui:read()
       print("index", self.focusedWidget)
       print("x", self.widgets[self.focusedWidget].pos[1], "y", self.widgets[self.focusedWidget].pos[2])
       print("width", self.widgets[self.focusedWidget].size[1], "height", self.widgets[self.focusedWidget].size[2])
+      print("type ", self.widgets[self.focusedWidget].type)
       print("Push enter to continue.")
       io.read()
       self.completeRedraw = true
@@ -91,9 +93,9 @@ function gui:read()
   elseif event == "mouse_scroll" then
     if self.widgets[self.focusedWidget]:handleMouseScroll(a, b, c) then eventn = self.focusedWidget end
   elseif event == "char" then
-    self.widgets[self.focusedWidget]:handleChar(a, b, c, d)
+    if self.widgets[self.focusedWidget]:handleChar(a, b, c, d) then eventn = self.focusedWidget end
   elseif event == "paste" then
-    self.widgets[self.focusedWidget]:handlePaste(a)
+    if self.widgets[self.focusedWidget]:handlePaste(a) then eventn = self.focusedWidget end
   elseif event == "mouse_drag" then
     if self.devMode then
       if a == 1 then
@@ -112,8 +114,6 @@ function gui:read()
     end
   elseif event == "term_resize" and self.autofit then
     self:doAutofit()
-  else
-    self.widgets[self.focusedWidget]:otherEvent({event,a,b,c,d})
   end
   for key, v in pairs(self.widgets) do
     values[key] = v:getValue()
@@ -146,15 +146,14 @@ function gui:doAutofit()
 end
 
 -- @param o original object, usually set to `nil`
-function gui:new(o, widgets, parameters)
+function gui.new(o, widgets, parameters)
   o = o or {}
-  setmetatable(o, self)
-  self.__index = self
+  setmetatable(o, gui)
   o.widgets = widgets
   o.selectableWidgetKeys = {}
   for key, value in pairs(o.widgets) do
     if value.selectable then
-      table.insert(o.selectableWidgetKeys, key)
+      o.selectableWidgetKeys[#o.selectableWidgetKeys+1] = key
     end
   end
   if #o.selectableWidgetKeys == 0 then

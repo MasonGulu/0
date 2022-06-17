@@ -2,7 +2,7 @@
 -- Inherits from the widget object.
 -- @see widget
 -- @module listbox
-local widget = require("gui.widget")
+local widget = require("ccsg.widget")
 
 -- @table listbox defaults for the listbox widget
 local listbox = {
@@ -87,15 +87,15 @@ function listbox:handleMouseClick(mouseButton, mouseX, mouseY)
     -- Click is on the sidebar
     if y == 1 then
       -- up
-      self.scrollOffset = self._scrollOffset - 1
+      self._scrollOffset = self._scrollOffset - 1
       if self._scrollOffset < 0 then
-        self.scrollOffset = 0
+        self._scrollOffset = 0
       end
     elseif y == self.size[2] then
       -- down
-      self.scrollOffset = self._scrollOffset + 1
+      self._scrollOffset = self._scrollOffset + 1
       if self._scrollOffset > #self.T - 1 then
-        self.scrollOffset = #self.T - 1
+        self._scrollOffset = #self.T - 1
       end
     end
   elseif x > 1 and x < self.size[1] - 2 and mouseButton == 1 then
@@ -107,20 +107,20 @@ function listbox:handleMouseClick(mouseButton, mouseX, mouseY)
 end
 
 --- Handle key events
--- @tparam int keycode
+-- @tparam int code
 -- @tparam bool held
 -- @treturn bool enter is used to toggle selection of an element and enable_events
 function listbox:handleKey(code, held)
   if code == keys.up then
-    self.scrollOffset = self._scrollOffset - 1
+    self._scrollOffset = self._scrollOffset - 1
     if self._scrollOffset < 0 then
-      self.scrollOffset = 0
+      self._scrollOffset = 0
     end
   elseif code == keys.down then
     -- down
-    self.scrollOffset = self._scrollOffset + 1
+    self._scrollOffset = self._scrollOffset + 1
     if self._scrollOffset > #self.T - 1 then
-      self.scrollOffset = #self.T - 1
+      self._scrollOffset = #self.T - 1
     end
   elseif code == keys.enter then
     self:_selectElement(self._scrollOffset + 1)
@@ -136,14 +136,14 @@ end
 -- @treturn bool this widget wants to notify an event occured
 function listbox:handleMouseScroll(direction, mouseX, mouseY)
   if direction == 1 then
-    self.scrollOffset = self._scrollOffset + 1
+    self._scrollOffset = self._scrollOffset + 1
     if self._scrollOffset > #self.T - 1 then
-      self.scrollOffset = #self.T - 1
+      self._scrollOffset = #self.T - 1
     end
   elseif direction == -1 then
-    self.scrollOffset = self._scrollOffset - 1
+    self._scrollOffset = self._scrollOffset - 1
     if self._scrollOffset < 0 then
-      self.scrollOffset = 0
+      self._scrollOffset = 0
     end
   end
   return false
@@ -156,13 +156,13 @@ function listbox:updateParameters(T, p)
   if #T < #self.T then
     -- list is smaller
     self.value = {}
-    self.scrollOffset = 0
+    self._scrollOffset = 0
     self._selectedOrder = {}
     self._selectedAmount = 0
   end
   self.T = T
   self:_applyParameters(p)
-  self.scrollOffset = math.man(math.min(self._scrollOffset, #self.T-1),0)
+  self._scrollOffset = math.max(math.min(self._scrollOffset, #self.T-1),0)
   local i = 1
   while (self._selectedAmount < self.minSelected) do
     self.value[i] = true
@@ -177,7 +177,7 @@ end
 function listbox:getValue()
   local returnValue = {}
   for key, value in pairs(self.value) do
-    if value and key < #self.T then
+    if value and key <= #self.T then
       returnValue[#returnValue + 1] = key
     elseif key > #self.T then
       self.value[key] = nil
@@ -186,18 +186,16 @@ function listbox:getValue()
   return returnValue
 end
 
---- Create a new button widget.
+--- Create a new divider widget.
 -- @tparam table pos {x,y}
 -- @tparam table size {width,height}
 -- @tparam table T table of selections
 -- @tparam[opt] table p
--- @treturn table button
-function listbox:new(pos, size, T, p)
+-- @treturn table divider
+function listbox.new(pos, size, T, p)
   -- takes an ordered table of string displayable objects, value is the index of the selected element
-  o = o or {}
-  o = widget:new(o, pos, size, p)
-  setmetatable(o, self)
-  self.__index = self
+  local o = widget.new(nil, pos, size, p)
+  setmetatable(o, listbox)
   o.T = T
   o.value = {}
   o._selectedOrder = {} -- start -> end = oldest -> newest selected

@@ -1,7 +1,7 @@
 --- A widget that allows you to print data out.
 -- @see widget
 -- @module printoutput
-local widget = require("gui.widget")
+local widget = require("ccsg.widget")
 
 --- Defaults for the printoutput widget
 -- @table printoutput
@@ -62,11 +62,9 @@ end
 -- @tparam table size {width,height}
 -- @tparam[opt] table p
 -- @treturn table printoutput
-function printoutput:new(pos, size, p)
-  o = o or {}
-  o = widget:new(o, pos, size, p)
-  setmetatable(o, self)
-  self.__index = self
+function printoutput.new(pos, size, p)
+  local o = widget.new(nil, pos, size, p)
+  setmetatable(o, printoutput)
   o.value = {}
   o.textArea = { o.size[1] - 2, o.size[2] }
   for i = 1, o.textArea[2] do

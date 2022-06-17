@@ -1,7 +1,12 @@
+--- This is an alternative way to use ccsimplegui. This will allow you to position elements based on physical location in a table.
+-- All sizing will be handled automatically for you.
+-- @module ccsimplegui
+
 local gui = require("ccsg.gui")
 local expect = require("cc.expect")
 local CCSimpleGUI = {}
 
+-- This converts a guiTable (a table of specially formatted tables that don't contain any functions or metatables) to a widget table ready to be used with gui.new()
 local function convertGUITableToWidgetTable(guiTable)
   expect(1, guiTable, "table")
   expect.field(guiTable, "width", "number")
@@ -82,9 +87,9 @@ local function convertGUITableToWidgetTable(guiTable)
       vColumn.posArgs = vColumn.posArgs or {}
       local tmpWidget = nil
       if #vColumn.posArgs > 0 then
-        tmpWidget = requiredWidgets[vColumn.type].new(nil, { widgetXPos, kRow }, { widgetWidth, vColumn.height }, table.unpack(vColumn.posArgs), vColumn.parameters)
+        tmpWidget = requiredWidgets[vColumn.type].new({ widgetXPos, kRow }, { widgetWidth, vColumn.height }, table.unpack(vColumn.posArgs), vColumn.parameters)
       else
-        tmpWidget = requiredWidgets[vColumn.type].new(nil, { widgetXPos, kRow }, { widgetWidth, vColumn.height }, vColumn.parameters)
+        tmpWidget = requiredWidgets[vColumn.type].new({ widgetXPos, kRow }, { widgetWidth, vColumn.height }, vColumn.parameters)
       end
       if vColumn.key then
         widgets[vColumn.key] = tmpWidget
@@ -97,13 +102,24 @@ local function convertGUITableToWidgetTable(guiTable)
   return widgets
 end
 
+--- Create a gui from a positional based table of CCSimpleGUI objects.
+-- These objects should be from this class
+-- @tparam table guiTable
+-- @return table gui object (from gui.lua)
 function CCSimpleGUI.new(guiTable)
   expect(1, guiTable, "table")
   guiTable.parameters = guiTable.parameters or {}
   guiTable.parameters.autofit = true
-  return gui.new(nil, convertGUITableToWidgetTable(guiTable), guiTable.parameters)
+  return gui.new(convertGUITableToWidgetTable(guiTable), guiTable.parameters)
 end
 
+--- Create a text widget.
+-- @see text
+-- @tparam string text
+-- @tparam[opt] int width
+-- @tparam[optchain] int height
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.text(text, width, height, parameters)
   expect(1, text, "string")
   expect(2, width, "number", "nil")
@@ -118,6 +134,11 @@ function CCSimpleGUI.text(text, width, height, parameters)
   }
 end
 
+--- Create a top divider widget.
+-- @see divider
+-- @tparam[opt] int width
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.top(width, parameters)
   expect(1, width, "number", "nil")
   expect(2, parameters, "table", "nil")
@@ -130,6 +151,11 @@ function CCSimpleGUI.top(width, parameters)
   }
 end
 
+--- Create a bottom divider widget.
+-- @see divider
+-- @tparam[opt] int width
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.bottom(width, parameters)
   expect(1, width, "number", "nil")
   expect(2, parameters, "table", "nil")
@@ -142,6 +168,11 @@ function CCSimpleGUI.bottom(width, parameters)
   }
 end
 
+--- Create a divider widget.
+-- @see divider
+-- @tparam[opt] int width
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.divider(width, parameters)
   expect(1, width, "number", "nil")
   expect(2, parameters, "table", "nil")
@@ -152,6 +183,14 @@ function CCSimpleGUI.divider(width, parameters)
   }
 end
 
+--- Create a button widget.
+-- @see button
+-- @tparam string label
+-- @tparam[opt] string key
+-- @tparam[optchain] int width
+-- @tparam[optchain] int height
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.button(label, key, width, height, parameters)
   expect(1, label, "string")
   expect(2, key, "string", "nil")
@@ -168,6 +207,13 @@ function CCSimpleGUI.button(label, key, width, height, parameters)
   }
 end
 
+--- Create a checkbox widget.
+-- @see checkbox
+-- @tparam string label
+-- @tparam[opt] string key
+-- @tparam[optchain] int width
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.checkbox(label, key, width, parameters)
   expect(1, label, "string")
   expect(2, key, "string", "nil")
@@ -182,6 +228,14 @@ function CCSimpleGUI.checkbox(label, key, width, parameters)
   }
 end
 
+--- Create a listbox widget.
+-- @see listbox
+-- @tparam table T
+-- @tparam[opt] string key
+-- @tparam[optchain] int width
+-- @tparam[optchain] int height
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.listbox(T, key, width, height, parameters)
   expect(1, T, "table")
   expect(2, key, "string", "nil")
@@ -198,6 +252,13 @@ function CCSimpleGUI.listbox(T, key, width, height, parameters)
   }
 end
 
+--- Create a printoutput widget.
+-- @see printoutput
+-- @tparam[opt] string key
+-- @tparam[optchain] int width
+-- @tparam[optchain] int height
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.printoutput(key, width, height, parameters)
   expect(1, key, "string", "nil")
   expect(2, width, "number", "nil")
@@ -212,6 +273,13 @@ function CCSimpleGUI.printoutput(key, width, height, parameters)
   }
 end
 
+--- Create a scrollinput widget.
+-- @see scrollinput
+-- @tparam table T
+-- @tparam[opt] string key
+-- @tparam[optchain] int width
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.scrollinput(T, key, width, parameters)
   expect(1, T, "table")
   expect(2, key, "string", "nil")
@@ -226,6 +294,12 @@ function CCSimpleGUI.scrollinput(T, key, width, parameters)
   }
 end
 
+--- Create a textinput widget.
+-- @see textinput
+-- @tparam[opt] string key
+-- @tparam[optchain] int width
+-- @tparam[optchain] table parameters
+-- @treturn table
 function CCSimpleGUI.textinput(key, width, parameters)
   expect(1, key, "string", "nil")
   expect(2, width, "number", "nil")
@@ -235,6 +309,27 @@ function CCSimpleGUI.textinput(key, width, parameters)
     width = width,
     parameters = parameters,
     key = key,
+  }
+end
+
+--- Create a progressbar widget.
+-- @see progressbar
+-- @tparam number maxValue
+-- @tparam[opt] string key
+-- @tparam[optchain] int width
+-- @tparam[optchain] table parameters
+-- @treturn table
+function CCSimpleGUI.progressbar(maxValue, key, width, parameters)
+  expect(1, maxValue, "number")
+  expect(2, key, "string", "nil")
+  expect(3, width, "number", "nil")
+  expect(4, parameters, "table", "nil")
+  return {
+    type = "progressbar",
+    width = width,
+    key = key,
+    posArgs = {maxValue},
+    parameters = parameters
   }
 end
 

@@ -1,18 +1,18 @@
-local gui = {
-  disableBuffering = false,
-  devMode = false,
-  device = term,
-  timeout = nil,
-  autofit = false,
-}
-gui.__index = gui
+--- The main GUI handling object
+-- @module gui
 
-local errorBack = error
-function error(message, level)
-  term.setCursorPos(1, 1)
-  term.clear()
-  errorBack(message, level)
-end
+--- Default parameters for gui objects
+-- @table gui
+local gui = {
+  disableBuffering = false, -- Boolean, disable dithering
+  devMode = false, -- Boolean, devMode enables dragging widgets around and using middle click to gather information about the selected widget.
+  device = term, -- Not implmented, GUIs can currently only be displayed on the terminal
+  timeout = nil, -- Nil or number, set to enable timeouts
+  autofit = false, -- Boolean, when enabled the gui will be centered in the middle of the terminal. This expects your gui to be anchored at 1,1.
+}
+
+-- Setup object oriented thing
+gui.__index = gui
 
 function gui:_draw()
   for key, v in pairs(self.widgets) do
@@ -36,6 +36,10 @@ function gui:_isXYonWidget(x, y, widget)
   return false
 end
 
+--- Read events from the gui.
+-- @return string/number/nil key of element that threw an event
+-- @treturn table Values of all elements in the gui, indexed by their index in the widget table
+-- @treturn table event table {os.pullEvent()}
 function gui:read()
   if self.completeRedraw then
     term.setTextColor(colors.white)
@@ -145,8 +149,10 @@ function gui:doAutofit()
   self.completeRedraw = true
 end
 
--- @param o original object, usually set to `nil`
-function gui.new(o, widgets, parameters)
+--- Create a new gui object
+-- @tparam table widgets widget table
+-- @tparam[opt] table parameters
+function gui.new(widgets, parameters)
   o = o or {}
   setmetatable(o, gui)
   o.widgets = widgets

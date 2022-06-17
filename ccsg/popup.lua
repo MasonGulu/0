@@ -17,7 +17,7 @@ function popup.getInput(message, width)
   local textinput = require("ccsg.textinput")
   local button = require("ccsg.button")
   local divider = require("ccsg.divider")
-  local win = gui.new(nil, {
+  local win = gui.new({
     divider.new({ 1, 1 }, { width, 1 }, { top = true }),
     text.new({ 1, 2 }, { width, 1 }, message),
     input = textinput.new({ 1, 3 }, { width, 1 }),
@@ -55,7 +55,7 @@ function popup.pickFromList(message, list, width)
 
   local buttonWidth = math.floor(width / 2)
 
-  local win = gui.new(nil, {
+  local win = gui.new({
     divider.new({ 1, 1 }, { width, 1 }, { top = true }),
     text.new({ 1, 2 }, { width, 2 }, message),
     listbox = listbox.new({ 1, 4 }, { width, 5 }, list),
@@ -152,7 +152,7 @@ function popup.fileBrowse(fileExtension, write, width, height)
   else
     widgets.filenameInput = textinput.new({ 1, height + 5 }, { width, 1 })
   end
-  local win = gui.new(nil, widgets, {autofit=true})
+  local win = gui.new(widgets, {autofit=true})
 
   local dirChanged = true -- whether to recalculate the current directory
   local currentDir = "/"
@@ -225,7 +225,7 @@ function popup.info(message, buttonLabel, width, height)
   local button = require("ccsg.button")
   local divider = require("ccsg.divider")
   buttonLabel = buttonLabel or "Close"
-  local win = gui.new(nil, {
+  local win = gui.new({
     divider.new({ 1, 1 }, { width, 1 }, { top = true }),
     text.new({ 1, 2 }, { width, height }, message),
     ackButton = button.new({ 1, 2 + height }, { width, 1 }, buttonLabel),
@@ -252,7 +252,7 @@ function popup.confirm(message, height, width)
   local text = require("ccsg.text")
   local button = require("ccsg.button")
   local divider = require("ccsg.divider")
-  local win = gui.new(nil, {
+  local win = gui.new({
     divider.new({ 1, 1 }, { width, 1 }, { top = true }),
     text.new({ 1, 2 }, { width, height }, message),
     noButton = button.new({ 1, 2 + height }, { buttonWidth, 1 }, "No"),
@@ -312,7 +312,7 @@ function popup.editT(T, textString, textHeight, keyWidth, valueWidth)
   widgets.DIV3 = divider.new({ 1, 1 + offset }, { width, 1 })
   widgets.ackButton = button.new({ 1, offset + 2 }, { width, 1 }, "Submit")
   widgets.DIV4 = divider.new({ 1, offset + 3 }, { width, 1 }, { bottom = true })
-  local win = gui.new(nil, widgets, { autofit=true})
+  local win = gui.new(widgets, { autofit=true})
   local event, values
   repeat
     event, values = win:read()

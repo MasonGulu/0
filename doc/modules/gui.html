@@ -42,8 +42,8 @@
   <li><a href="../modules/button.html">button</a></li>
   <li><a href="../modules/ccsimplegui.html">ccsimplegui</a></li>
   <li><a href="../modules/checkbox.html">checkbox</a></li>
-  <li><strong>divider</strong></li>
-  <li><a href="../modules/gui.html">gui</a></li>
+  <li><a href="../modules/divider.html">divider</a></li>
+  <li><strong>gui</strong></li>
   <li><a href="../modules/listbox.html">listbox</a></li>
   <li><a href="../modules/popup.html">popup</a></li>
   <li><a href="../modules/printoutput.html">printoutput</a></li>
@@ -58,36 +58,27 @@
 
 <div id="content">
 
-<h1>Module <code>divider</code></h1>
-<p>A visual divider that has no additional functionality
- Inherits from the widget object.</p>
+<h1>Module <code>gui</code></h1>
+<p>The main GUI handling object</p>
 <p></p>
-    <h3>See also:</h3>
-    <ul>
-         <a href="../modules/widget.html#">widget</a>
-    </ul>
 
 
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#draw">draw ()</a></td>
-	<td class="summary">Draw the divider widget.</td>
+	<td class="name" nowrap><a href="#read">read ()</a></td>
+	<td class="summary">Read events from the gui.</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#updateSize">updateSize (width, height)</a></td>
-	<td class="summary">Function called to update the size of the widget.</td>
-	</tr>
-	<tr>
-	<td class="name" nowrap><a href="#new">new (pos, size[, p])</a></td>
-	<td class="summary">Create a new divider widget.</td>
+	<td class="name" nowrap><a href="#new">new (widgets[, parameters])</a></td>
+	<td class="summary">Create a new gui object</td>
 	</tr>
 </table>
 <h2><a href="#Tables">Tables</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#divider">divider</a></td>
-	<td class="summary">Defaults for the divider widget</td>
+	<td class="name" nowrap><a href="#gui">gui</a></td>
+	<td class="summary">Default parameters for gui objects</td>
 	</tr>
 </table>
 
@@ -99,39 +90,25 @@
 
     <dl class="function">
     <dt>
-    <a name = "draw"></a>
-    <strong>draw ()</strong>
+    <a name = "read"></a>
+    <strong>read ()</strong>
     </dt>
     <dd>
-    Draw the divider widget.
+    Read events from the gui.
 
 
 
-
-
-
-
-</dd>
-    <dt>
-    <a name = "updateSize"></a>
-    <strong>updateSize (width, height)</strong>
-    </dt>
-    <dd>
-    Function called to update the size of the widget.
-
-
-    <h3>Parameters:</h3>
-    <ul>
-        <li><span class="parameter">width</span>
-            <span class="types"><span class="type">int</span></span>
-
-        </li>
-        <li><span class="parameter">height</span>
-            <span class="types"><span class="type">int</span></span>
-
-        </li>
-    </ul>
-
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        string/number/nil key of element that threw an event</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        Values of all elements in the gui, indexed by their index in the widget table</li>
+        <li>
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        event table {os.pullEvent()}</li>
+    </ol>
 
 
 
@@ -139,35 +116,25 @@
 </dd>
     <dt>
     <a name = "new"></a>
-    <strong>new (pos, size[, p])</strong>
+    <strong>new (widgets[, parameters])</strong>
     </dt>
     <dd>
-    Create a new divider widget.
+    Create a new gui object
 
 
     <h3>Parameters:</h3>
     <ul>
-        <li><span class="parameter">pos</span>
+        <li><span class="parameter">widgets</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         {x,y}
+         widget table
         </li>
-        <li><span class="parameter">size</span>
-            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-         {width,height}
-        </li>
-        <li><span class="parameter">p</span>
+        <li><span class="parameter">parameters</span>
             <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
 
          (<em>optional</em>)
         </li>
     </ul>
 
-    <h3>Returns:</h3>
-    <ol>
-
-           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
-        divider
-    </ol>
 
 
 
@@ -178,29 +145,29 @@
 
     <dl class="function">
     <dt>
-    <a name = "divider"></a>
-    <strong>divider</strong>
+    <a name = "gui"></a>
+    <strong>gui</strong>
     </dt>
     <dd>
-    Defaults for the divider widget
+    Default parameters for gui objects
 
 
     <h3>Fields:</h3>
     <ul>
-        <li><span class="parameter">type</span>
-        string, used for gui packing/unpacking (must match filename without extension!)
+        <li><span class="parameter">disableBuffering</span>
+        Boolean, disable dithering
         </li>
-        <li><span class="parameter">selectable</span>
-        bool, disable interaction with this widget.
+        <li><span class="parameter">devMode</span>
+        Boolean, devMode enables dragging widgets around and using middle click to gather information about the selected widget.
         </li>
-        <li><span class="parameter">modifyWalls</span>
-        bool, whether to modify the walls from the default
+        <li><span class="parameter">device</span>
+        Not implmented, GUIs can currently only be displayed on the terminal
         </li>
-        <li><span class="parameter">top</span>
-        bool, whether this divider is the top (requires modifyWalls)
+        <li><span class="parameter">timeout</span>
+        Nil or number, set to enable timeouts
         </li>
-        <li><span class="parameter">bottom</span>
-        bool, whether this divider is the bottom (requires modifyWalls)
+        <li><span class="parameter">autofit</span>
+        Boolean, when enabled the gui will be centered in the middle of the terminal. This expects your gui to be anchored at 1,1.
         </li>
     </ul>
 

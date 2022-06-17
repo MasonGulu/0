@@ -1,0 +1,649 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/button.html">button</a></li>
+  <li><strong>ccsimplegui</strong></li>
+  <li><a href="../modules/checkbox.html">checkbox</a></li>
+  <li><a href="../modules/divider.html">divider</a></li>
+  <li><a href="../modules/gui.html">gui</a></li>
+  <li><a href="../modules/listbox.html">listbox</a></li>
+  <li><a href="../modules/popup.html">popup</a></li>
+  <li><a href="../modules/printoutput.html">printoutput</a></li>
+  <li><a href="../modules/progressbar.html">progressbar</a></li>
+  <li><a href="../modules/scrollinput.html">scrollinput</a></li>
+  <li><a href="../modules/text.html">text</a></li>
+  <li><a href="../modules/textinput.html">textinput</a></li>
+  <li><a href="../modules/widget.html">widget</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>ccsimplegui</code></h1>
+<p>This is an alternative way to use ccsimplegui.</p>
+<p> This will allow you to position elements based on physical location in a table.
+ All sizing will be handled automatically for you.</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.new">CCSimpleGUI.new (guiTable)</a></td>
+	<td class="summary">Create a gui from a positional based table of CCSimpleGUI objects.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.text">CCSimpleGUI.text (text[, width[, height[, parameters]]])</a></td>
+	<td class="summary">Create a text widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.top">CCSimpleGUI.top ([width[, parameters]])</a></td>
+	<td class="summary">Create a top divider widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.bottom">CCSimpleGUI.bottom ([width[, parameters]])</a></td>
+	<td class="summary">Create a bottom divider widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.divider">CCSimpleGUI.divider ([width[, parameters]])</a></td>
+	<td class="summary">Create a divider widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.button">CCSimpleGUI.button (label[, key[, width[, height[, parameters]]]])</a></td>
+	<td class="summary">Create a button widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.checkbox">CCSimpleGUI.checkbox (label[, key[, width[, parameters]]])</a></td>
+	<td class="summary">Create a checkbox widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.listbox">CCSimpleGUI.listbox (T[, key[, width[, height[, parameters]]]])</a></td>
+	<td class="summary">Create a listbox widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.printoutput">CCSimpleGUI.printoutput ([key[, width[, height[, parameters]]]])</a></td>
+	<td class="summary">Create a printoutput widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.scrollinput">CCSimpleGUI.scrollinput (T[, key[, width[, parameters]]])</a></td>
+	<td class="summary">Create a scrollinput widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.textinput">CCSimpleGUI.textinput ([key[, width[, parameters]]])</a></td>
+	<td class="summary">Create a textinput widget.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#CCSimpleGUI.progressbar">CCSimpleGUI.progressbar (maxValue[, key[, width[, parameters]]])</a></td>
+	<td class="summary">Create a progressbar widget.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "CCSimpleGUI.new"></a>
+    <strong>CCSimpleGUI.new (guiTable)</strong>
+    </dt>
+    <dd>
+    Create a gui from a positional based table of CCSimpleGUI objects.
+ These objects should be from this class
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">guiTable</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        table gui object (from gui.lua)
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.text"></a>
+    <strong>CCSimpleGUI.text (text[, width[, height[, parameters]]])</strong>
+    </dt>
+    <dd>
+    Create a text widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/text.html#">text</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.top"></a>
+    <strong>CCSimpleGUI.top ([width[, parameters]])</strong>
+    </dt>
+    <dd>
+    Create a top divider widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/divider.html#">divider</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.bottom"></a>
+    <strong>CCSimpleGUI.bottom ([width[, parameters]])</strong>
+    </dt>
+    <dd>
+    Create a bottom divider widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/divider.html#">divider</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.divider"></a>
+    <strong>CCSimpleGUI.divider ([width[, parameters]])</strong>
+    </dt>
+    <dd>
+    Create a divider widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/divider.html#">divider</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.button"></a>
+    <strong>CCSimpleGUI.button (label[, key[, width[, height[, parameters]]]])</strong>
+    </dt>
+    <dd>
+    Create a button widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">label</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/button.html#">button</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.checkbox"></a>
+    <strong>CCSimpleGUI.checkbox (label[, key[, width[, parameters]]])</strong>
+    </dt>
+    <dd>
+    Create a checkbox widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">label</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+        </li>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/checkbox.html#">checkbox</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.listbox"></a>
+    <strong>CCSimpleGUI.listbox (T[, key[, width[, height[, parameters]]]])</strong>
+    </dt>
+    <dd>
+    Create a listbox widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">T</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+        </li>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/listbox.html#">listbox</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.printoutput"></a>
+    <strong>CCSimpleGUI.printoutput ([key[, width[, height[, parameters]]]])</strong>
+    </dt>
+    <dd>
+    Create a printoutput widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">height</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/printoutput.html#">printoutput</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.scrollinput"></a>
+    <strong>CCSimpleGUI.scrollinput (T[, key[, width[, parameters]]])</strong>
+    </dt>
+    <dd>
+    Create a scrollinput widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">T</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+        </li>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/scrollinput.html#">scrollinput</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.textinput"></a>
+    <strong>CCSimpleGUI.textinput ([key[, width[, parameters]]])</strong>
+    </dt>
+    <dd>
+    Create a textinput widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/textinput.html#">textinput</a>
+    </ul>
+
+
+</dd>
+    <dt>
+    <a name = "CCSimpleGUI.progressbar"></a>
+    <strong>CCSimpleGUI.progressbar (maxValue[, key[, width[, parameters]]])</strong>
+    </dt>
+    <dd>
+    Create a progressbar widget.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">maxValue</span>
+            <span class="types"><span class="type">number</span></span>
+
+        </li>
+        <li><span class="parameter">key</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.4">string</a></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">width</span>
+            <span class="types"><span class="type">int</span></span>
+
+         (<em>optional</em>)
+        </li>
+        <li><span class="parameter">parameters</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+         (<em>optional</em>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+
+    </ol>
+
+
+    <h3>See also:</h3>
+    <ul>
+         <a href="../modules/progressbar.html#">progressbar</a>
+    </ul>
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2022-06-16 23:21:12 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

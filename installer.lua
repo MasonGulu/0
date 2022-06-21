@@ -16,7 +16,7 @@ local availableWidgets = {
   "progressbar",
   "scrollinput",
   "text",
-  "textinput"
+  "textinput",
 }
 
 local popupRequires = {
@@ -49,6 +49,8 @@ local function main()
     widgetLayout[valueLeft] = checkbox.new({1, 6+math.floor(i/2)}, {HALFWIDTH,1},valueLeft)
     if valueRight then
       widgetLayout[valueRight] = checkbox.new({HALFWIDTH+1, 6+math.floor(i/2)}, {HALFWIDTH,1},valueRight)
+    else
+      widgetLayout[#widgetLayout+1] = text.new({HALFWIDTH+1, 6+math.floor(i/2)}, {HALFWIDTH,1} ,"")
     end
   end
 

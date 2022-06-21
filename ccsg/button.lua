@@ -13,7 +13,6 @@ local button = {
 -- Setup inheritence
 setmetatable(button, widget)
 button.__index = button
-setmetatable(button.theme, widget.theme) -- This is necessary because we modified the default theme table
 
 --- Draw the button widget.
 function button:draw()
@@ -76,7 +75,8 @@ function button.new(pos, size, string, p)
   local o = widget.new(nil, pos, size, p)
   setmetatable(o, button)
   o.value = string
-  o.theme.internalInvert = true
+  o.theme = {internalInvert = true}
+  setmetatable(o.theme, widget.theme) -- This is necessary because we modified the default theme table
   o:_applyParameters(p)
   return o
 end

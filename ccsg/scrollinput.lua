@@ -8,7 +8,8 @@ local widget = require("ccsg.widget")
 -- @table scrollinput
 local scrollinput = {
   type = "scrollinput", -- string, used for gui packing/unpacking (must match filename without extension!)
-  enable_events = true -- bool, events are enabled by default for scrollinputs
+  enable_events = true, -- bool, events are enabled by default for scrollinputs
+  VERSION = "2.0",
 }
 -- Setup inheritence
 setmetatable(scrollinput, widget)

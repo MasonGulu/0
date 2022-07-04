@@ -1,7 +1,9 @@
 --- A collection of premade popups for you to use in your program
 
 local gui = require("ccsg.gui")
-local popup = {}
+local popup = {
+  VERSION = "2.0"
+}
 
 --- Get input from the user
 -- @tparam string message

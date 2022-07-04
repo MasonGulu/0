@@ -8,6 +8,7 @@ local widget = require("ccsg.widget")
 local printoutput = {
   type = "printoutput", -- string, used for gui packing/unpacking (must match filename without extension!)
   selectable = false, -- bool, disable interaction with this widget
+  VERSION = "2.0",
 }
 -- Setup inheritence
 setmetatable(printoutput, widget)

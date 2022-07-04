@@ -14,6 +14,7 @@ local textinput = {
   hasDecimal = false, -- bool, internal value but if set to true can prevent users from inputing non-integer numbers
   hideInput = false, -- bool, whether to hide the input or not
   enable_events = true, -- bool, events are enabled by default
+  VERSION = "2.0",
 }
 -- Setup inheritence
 setmetatable(textinput, widget)

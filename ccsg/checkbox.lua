@@ -8,7 +8,8 @@ local widget = require("ccsg.widget")
 --- Defaults for the checkbox widget
 -- @table checkbox
 local checkbox = {
-  type = "checkbox" -- string, used for gui packing/unpacking (must match filename without extension!)
+  type = "checkbox", -- string, used for gui packing/unpacking (must match filename without extension!)
+  VERSION = "2.0",
 }
 -- Setup inheritence
 setmetatable(checkbox, widget)

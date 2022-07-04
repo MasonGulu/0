@@ -12,7 +12,8 @@ local listbox = {
   _selectedAmount = 0,
   deselectOldSelections = true, -- deselect the last selected element to make room for the next element, true default
   _scrollOffset = 0,
-  enable_events = true -- bool, events are enabled by default for listboxes
+  enable_events = true, -- bool, events are enabled by default for listboxes
+  VERSION = "2.0",
 }
 
 -- Setup inheritence

@@ -11,6 +11,7 @@ local progressbar = {
   fullChar = "\127", -- character to use for full segments
   halfChar = "\149", -- character to use for >half segments
   selectable = false,
+  VERSION = "2.0",
 }
 -- Setup inheritence
 setmetatable(progressbar, widget)

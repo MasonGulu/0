@@ -12,6 +12,7 @@ local divider = {
   modifyWalls = true, -- bool, whether to modify the walls from the default
   top = false, -- bool, whether this divider is the top (requires modifyWalls)
   bottom = false, -- bool, whether this divider is the bottom (requires modifyWalls)
+  VERSION = "2.0",
 }
 -- Setup inheritence
 setmetatable(divider, widget)

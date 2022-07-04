@@ -10,6 +10,7 @@ local widget = require("ccsg.widget")
 local text = {
   type = "text",-- string, used for gui packing/unpacking (must match filename without extension!)
   selectable = false, -- bool, disable interaction with this widget
+  VERSION = "2.0",
 }
 -- Setup inheritence
 setmetatable(text, widget)

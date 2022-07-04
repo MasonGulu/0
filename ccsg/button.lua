@@ -9,6 +9,7 @@ local widget = require("ccsg.widget")
 local button = {
   type = "button", -- string, used for gui packing/unpacking (must match filename without extension!)
   enable_events = true, -- bool, events are enabled by default for buttons
+  VERSION = "2.0",
 }
 -- Setup inheritence
 setmetatable(button, widget)

@@ -15,6 +15,7 @@ local widget = {
   selectable = true, -- bool, should this object be selectable?
   theme = {}, -- table, theme information
   type = "widget", -- string, name of file / widget type
+  VERSION = "2.0",
 }
 
 widget.__index = widget

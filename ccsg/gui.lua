@@ -9,6 +9,7 @@ local gui = {
   device = term, -- Not implmented, GUIs can currently only be displayed on the terminal
   timeout = nil, -- Nil or number, set to enable timeouts
   autofit = false, -- Boolean, when enabled the gui will be centered in the middle of the terminal. This expects your gui to be anchored at 1,1.
+  VERSION = "2.0",
 }
 
 -- Setup object oriented thing

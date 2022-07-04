@@ -53,6 +53,7 @@ end
 -- @tparam int mouseY global Y
 -- @treturn bool value has changed and enable_events
 function scrollinput:handleMouseScroll(direction, mouseX, mouseY)
+  print("hhhhhhh") sleep(3)
   if direction == 1 then
     self.value = self.value + 1
     if self.value > self.length then
@@ -108,6 +109,7 @@ end
 -- @treturn table scrollinput object
 function scrollinput.new(pos, size, options, p)
   local o = widget.new(nil, pos, size, p)
+  setmetatable(o, scrollinput)
   o.value = 1
   o.options = options
   o.length = #o.options

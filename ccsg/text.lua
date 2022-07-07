@@ -10,7 +10,7 @@ local widget = require("ccsg.widget")
 local text = {
   type = "text",-- string, used for gui packing/unpacking (must match filename without extension!)
   selectable = false, -- bool, disable interaction with this widget
-  VERSION = "2.0",
+  VERSION = "3.0",
 }
 -- Setup inheritence
 setmetatable(text, widget)
@@ -19,10 +19,9 @@ text.__index = text
 --- Draw the text widget.
 function text:draw()
   self:clear()
-  self:drawFrame()
   for i = 1, self.textArea[2] do
     local preppedString = self.value[i]:sub(1, self.size[1] - 2)
-    self:writeTextToLocalXY(preppedString, 1, self.textArea[2] + 1 - i)
+    self:write(preppedString, 1, self.textArea[2] + 1 - i)
   end
 end
 
@@ -70,15 +69,17 @@ end
 -- @tparam string string
 -- @tparam[opt] table p
 -- @treturn table text object
-function text.new(pos, size, string, p)
-  local o = widget.new(nil, pos, size, p)
+function text.new(p)
+  p.label = p.label or p[3]
+  assert(p.label ~= nil, "Text requires a label")
+  local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, text)
   o.value = {}
   o.textArea = { o.size[1] - 2, o.size[2] }
   for i = 1, o.textArea[2] do
     o.value[i] = ""
   end
-  o.string = string
+  o.string = p.label
   o:formatStringToFitWidth(o.string)
   o:_applyParameters(p)
   return o

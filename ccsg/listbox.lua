@@ -13,7 +13,7 @@ local listbox = {
   deselectOldSelections = true, -- deselect the last selected element to make room for the next element, true default
   _scrollOffset = 0,
   enable_events = true, -- bool, events are enabled by default for listboxes
-  VERSION = "2.0",
+  VERSION = "3.0",
 }
 
 -- Setup inheritence
@@ -23,14 +23,14 @@ listbox.__index = listbox
 --- Draw the listbox widget.
 function listbox:draw()
   self:clear()
-  self:drawFrame()
-  self:writeTextToLocalXY(string.char(30), self.size[1] - 2, 1)
-  self:writeTextToLocalXY(string.char(31), self.size[1] - 2, self.size[2])
-  for key, value in ipairs(self.T) do
-    self.device.setCursorPos(2, key - self._scrollOffset)
-    self:setInternalColor(self.value[key] == true)
-    self.device.write(tostring(value):sub(1, self.size[1] - 3))
-    self:setPreviousColor()
+  self:writeClickable(string.char(30), self.size[1], 1)
+  self:writeClickable(string.char(31), self.size[1], self.size[2])
+  for key, value in ipairs(self.options) do
+    if (self.value[key] == true) then
+      self:writeClickable(tostring(value):sub(1, self.size[1] - 1), 1, key - self._scrollOffset)
+    else
+      self:write(tostring(value):sub(1, self.size[1] - 1), 1, key - self._scrollOffset)
+    end
   end
 end
 
@@ -44,7 +44,7 @@ local function getIndexOfItemInList(list, item)
 end
 
 function listbox:_selectElement(elementIndex)
-  elementIndex = math.min(elementIndex, #self.T)
+  elementIndex = math.min(elementIndex, #self.options)
   if type(self.value[elementIndex]) == "boolean" then
     if not self.value[elementIndex] and self._selectedAmount < self.maxSelected then
       -- this element would normally get selected AND we have space to select it
@@ -84,7 +84,7 @@ end
 function listbox:handleMouseClick(mouseButton, mouseX, mouseY)
   local x, y = self:convertGlobalXYToLocalXY(mouseX, mouseY)
 
-  if x == self.size[1] - 2 then
+  if x == self.size[1] then
     -- Click is on the sidebar
     if y == 1 then
       -- up
@@ -95,11 +95,11 @@ function listbox:handleMouseClick(mouseButton, mouseX, mouseY)
     elseif y == self.size[2] then
       -- down
       self._scrollOffset = self._scrollOffset + 1
-      if self._scrollOffset > #self.T - 1 then
-        self._scrollOffset = #self.T - 1
+      if self._scrollOffset > #self.options - 1 then
+        self._scrollOffset = #self.options - 1
       end
     end
-  elseif x > 1 and x < self.size[1] - 2 and mouseButton == 1 then
+  elseif x > 1 and x < self.size[1] and mouseButton == 1 then
     -- Click is on an element
     self:_selectElement(y + self._scrollOffset)
     return self.enable_events
@@ -120,8 +120,8 @@ function listbox:handleKey(code, held)
   elseif code == keys.down then
     -- down
     self._scrollOffset = self._scrollOffset + 1
-    if self._scrollOffset > #self.T - 1 then
-      self._scrollOffset = #self.T - 1
+    if self._scrollOffset > #self.options - 1 then
+      self._scrollOffset = #self.options - 1
     end
   elseif code == keys.enter then
     self:_selectElement(self._scrollOffset + 1)
@@ -138,8 +138,8 @@ end
 function listbox:handleMouseScroll(direction, mouseX, mouseY)
   if direction == 1 then
     self._scrollOffset = self._scrollOffset + 1
-    if self._scrollOffset > #self.T - 1 then
-      self._scrollOffset = #self.T - 1
+    if self._scrollOffset > #self.options - 1 then
+      self._scrollOffset = #self.options - 1
     end
   elseif direction == -1 then
     self._scrollOffset = self._scrollOffset - 1
@@ -154,16 +154,16 @@ end
 -- @tparam table T table of selections
 -- @tparam[opt] table p
 function listbox:updateParameters(T, p)
-  if #T < #self.T then
+  if #T < #self.options then
     -- list is smaller
     self.value = {}
     self._scrollOffset = 0
     self._selectedOrder = {}
     self._selectedAmount = 0
   end
-  self.T = T
+  self.options = T
   self:_applyParameters(p)
-  self._scrollOffset = math.max(math.min(self._scrollOffset, #self.T-1),0)
+  self._scrollOffset = math.max(math.min(self._scrollOffset, #self.options-1),0)
   local i = 1
   while (self._selectedAmount < self.minSelected) do
     self.value[i] = true
@@ -178,9 +178,9 @@ end
 function listbox:getValue()
   local returnValue = {}
   for key, value in pairs(self.value) do
-    if value and key <= #self.T then
+    if value and key <= #self.options then
       returnValue[#returnValue + 1] = key
-    elseif key > #self.T then
+    elseif key > #self.options then
       self.value[key] = nil
     end
   end
@@ -193,11 +193,13 @@ end
 -- @tparam table T table of selections
 -- @tparam[opt] table p
 -- @treturn table divider
-function listbox.new(pos, size, T, p)
+function listbox.new(p)
   -- takes an ordered table of string displayable objects, value is the index of the selected element
-  local o = widget.new(nil, pos, size, p)
+  p.options = p.options or p[3]
+  assert(p.options ~= nil, "Listbox requires options")
+  local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, listbox)
-  o.T = T
+  o.options = p.options
   o.value = {}
   o._selectedOrder = {} -- start -> end = oldest -> newest selected
   o.textWidth = o.size[2] - 3

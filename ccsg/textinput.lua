@@ -14,7 +14,7 @@ local textinput = {
   hasDecimal = false, -- bool, internal value but if set to true can prevent users from inputing non-integer numbers
   hideInput = false, -- bool, whether to hide the input or not
   enable_events = true, -- bool, events are enabled by default
-  VERSION = "2.0",
+  VERSION = "3.0",
 }
 -- Setup inheritence
 setmetatable(textinput, widget)
@@ -22,18 +22,17 @@ textinput.__index = textinput
 
 --- Draw the textinput widget
 function textinput:draw()
-  self:clear()
-  self:drawFrame()
+  self:clearClickable()
   if self.hideInput then
-    self:writeTextToLocalXY('\7', 1, 1)
-    self:writeTextToLocalXY(string.rep("*", string.len(self.value)), 2, 1)
+    self:writeClickable('\167', 1, 1)
+    self:writeClickable(string.rep("*", string.len(self.value)), 2, 1)
   else
     if self.numOnly then
-      self:writeTextToLocalXY('#', 1, 1)
+      self:writeClickable('#', 1, 1)
     else
-      self:writeTextToLocalXY('?', 1, 1)
+      self:writeClickable('?', 1, 1)
     end
-    self:writeTextToLocalXY(self.value, 2, 1)
+    self:writeClickable(self.value, 2, 1)
   end
 end
 
@@ -77,7 +76,7 @@ end
 -- @tparam int height
 function textinput:updateSize(width, height)
   widget.updateSize(self, width, height)
-  self.maxTextLen = self.size[1] - 3
+  self.maxTextLen = self.size[1] - 1
 end
 
 --- Get textinput's value
@@ -101,11 +100,11 @@ end
 -- @tparam table size {width,height}
 -- @tparam[opt] table p
 -- @treturn table textinput
-function textinput.new(pos, size, p)
-  local o = widget.new(nil, pos, size, p)
+function textinput.new(p)
+  local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, textinput)
   o.value = ""
-  o.maxTextLen = o.size[1] - 3
+  o.maxTextLen = o.size[1] - 1
   o.hasDecimal = false
   o:_applyParameters(p)
   return o

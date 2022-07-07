@@ -8,7 +8,8 @@ local widget = require("ccsg.widget")
 local printoutput = {
   type = "printoutput", -- string, used for gui packing/unpacking (must match filename without extension!)
   selectable = false, -- bool, disable interaction with this widget
-  VERSION = "2.0",
+  VERSION = "3.0",
+  firstRun = true, -- bool, clear this on next render call
 }
 -- Setup inheritence
 setmetatable(printoutput, widget)
@@ -16,46 +17,54 @@ printoutput.__index = printoutput
 
 --- Draw the printoutput widget.
 function printoutput:draw()
-  self:clear()
-  self:drawFrame()
-  for i = 1, self.textArea[2] do
-    local preppedString = ""
-    if self.value[i] then
-      preppedString = self.value[i]:sub(1, self.size[1] - 2)
-    end
-    self:writeTextToLocalXY(preppedString, 1, self.textArea[2] + 1 - i)
+  if self.firstRun then
+    self.firstRun = false
+    self:clear()
   end
 end
 
 --- Scroll the printoutput widget.
-function printoutput:scroll()
-  for x = #self.value + 1, 2, -1 do
-    self.value[x] = self.value[x - 1]
+function printoutput:scroll(lines)
+  self.window.scroll(lines)
+end
+
+function printoutput:_scrollCursor()
+  local pos = {self.window.getCursorPos()}
+  pos[1] = 1
+  pos[2] = pos[2] + 1
+  if pos[2] > self.size[2] then
+    self:scroll(1) -- at bottom of screen
+    pos[2] = self.size[2]
   end
-  self.value[1] = ""
+  self.window.setCursorPos(pos[1], pos[2])
 end
 
 --- Print whatever is provided to the printoutput widget.
 -- Scrolls before printing
 -- @tparam any ...
+-- @treturn number lines printed
 function printoutput:print(...)
-  str = ""
-  for k, v in pairs(arg) do
-    str = str.." "..tostring(k)
+  self:setInternalColor()
+  self.window.setVisible(false)
+  local lines = 1 -- guaranteed to print at least one empty line
+  for k,v in ipairs(arg) do
+    local string = tostring(v)
+    if k > 1 then -- not first element, add a space for padding
+      self.window.write(" ")
+    end
+    for charIndex = 1, string:len() do
+      self.window.write(string:sub(charIndex, charIndex)) -- write one character at a time
+      local pos = {self.window.getCursorPos()}
+      if pos[1] > self.size[1] then
+        self:_scrollCursor()
+        lines = lines + 1
+      end
+    end
   end
-  self:scroll()
-  self.value[1] = str:sub(1, self.textArea[1])
-  if str:len() > self.textArea[1] then
-    self:print(str:sub(self.textArea[1] + 1, -1))
-  end
-end
-
---- Update size
--- @tparam int width
--- @tparam int height
-function printoutput:updateSize(width, height)
-  self.size = { width, height }
-  self.textArea = { self.size[1] - 2, self.size[2] - 2 }
+  -- perform final newline
+  self:_scrollCursor()
+  self.window.setVisible(self.enable)
+  return lines
 end
 
 --- Create a new printoutput widget.
@@ -63,14 +72,10 @@ end
 -- @tparam table size {width,height}
 -- @tparam[opt] table p
 -- @treturn table printoutput
-function printoutput.new(pos, size, p)
-  local o = widget.new(nil, pos, size, p)
+function printoutput.new(p)
+  local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, printoutput)
   o.value = {}
-  o.textArea = { o.size[1] - 2, o.size[2] }
-  for i = 1, o.textArea[2] do
-    o.value[i] = ""
-  end
   o.selectable = false
   o:_applyParameters(p)
   return o

@@ -9,7 +9,7 @@ local widget = require("ccsg.widget")
 local scrollinput = {
   type = "scrollinput", -- string, used for gui packing/unpacking (must match filename without extension!)
   enable_events = true, -- bool, events are enabled by default for scrollinputs
-  VERSION = "2.0",
+  VERSION = "3.0",
 }
 -- Setup inheritence
 setmetatable(scrollinput, widget)
@@ -17,11 +17,10 @@ scrollinput.__index = scrollinput
 
 --- Draw the scrollinput widget.
 function scrollinput:draw()
-  self:clear()
-  self:drawFrame()
-  local preppedString = string.sub(self.options[self.value], 1, self.size[1] - 3)
-  self:writeTextToLocalXY(preppedString, 2, 1)
-  self:writeTextToLocalXY(string.char(18), 1, 1)
+  self:clearClickable()
+  local preppedString = string.sub(self.options[self.value], 1, self.size[1] - 1)
+  self:write(preppedString, 2, 1)
+  self:writeClickable(string.char(18), 1, 1)
 end
 
 --- Handle mouse_click events
@@ -31,7 +30,7 @@ end
 -- @treturn boolean mouseclick is on scroll button and enable_events
 function scrollinput:handleMouseClick(mouseButton, mouseX, mouseY)
   local x, y = self:convertGlobalXYToLocalXY(mouseX, mouseY)
-  if x > 0 and y > 0 then
+  if x == 1 and y == 1 then
     if mouseButton == 1 then
       self.value = self.value + 1
       if self.value > self.length then
@@ -54,7 +53,6 @@ end
 -- @tparam int mouseY global Y
 -- @treturn bool value has changed and enable_events
 function scrollinput:handleMouseScroll(direction, mouseX, mouseY)
-  print("hhhhhhh") sleep(3)
   if direction == 1 then
     self.value = self.value + 1
     if self.value > self.length then
@@ -108,11 +106,13 @@ end
 -- @tparam table options
 -- @tparam[opt] table p
 -- @treturn table scrollinput object
-function scrollinput.new(pos, size, options, p)
-  local o = widget.new(nil, pos, size, p)
+function scrollinput.new(p)
+  p.options = p.options or p[3]
+  assert(type(p.options)=="table", "Scrollinput requires options")
+  local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, scrollinput)
   o.value = 1
-  o.options = options
+  o.options = p.options
   o.length = #o.options
   o:_applyParameters(p)
   return o

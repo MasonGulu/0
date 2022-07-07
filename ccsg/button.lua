@@ -9,7 +9,7 @@ local widget = require("ccsg.widget")
 local button = {
   type = "button", -- string, used for gui packing/unpacking (must match filename without extension!)
   enable_events = true, -- bool, events are enabled by default for buttons
-  VERSION = "2.0",
+  VERSION = "3.0",
 }
 -- Setup inheritence
 setmetatable(button, widget)
@@ -17,10 +17,9 @@ button.__index = button
 
 --- Draw the button widget.
 function button:draw()
-  self:clear()
-  self:drawFrame()
-  local preppedString = self.value:sub(1, self.size[1] - 2)
-  self:writeTextToLocalXY(preppedString, 1, 1)
+  self:clearClickable()
+  local preppedString = self.label:sub(1, self.size[1])
+  self:writeClickable(preppedString, 1, 1)
 end
 
 --- Handle mouse_click events
@@ -30,7 +29,7 @@ end
 -- @treturn boolean mouseclick is on button and enable_events
 function button:handleMouseClick(mouseButton, mouseX, mouseY)
   local x, y = self:convertGlobalXYToLocalXY(mouseX, mouseY)
-  if y > 0 and y < self.size[2] + 1 and x > 0 and x < self.size[1] - 1 then
+  if y > 0 and y <= self.size[2] and x > 0 and x <= self.size[1] then
     return self.enable_events
   end
   return false
@@ -72,12 +71,12 @@ end
 -- @tparam string string single line string to display
 -- @tparam[opt] table p
 -- @treturn table button
-function button.new(pos, size, string, p)
-  local o = widget.new(nil, pos, size, p)
+function button.new(p)
+  -- expects a label
+  p.label = p.label or p[3]
+  assert(p.label ~= nil, "Button requires a label")
+  local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, button)
-  o.value = string
-  o.theme = {internalInvert = true}
-  setmetatable(o.theme, widget.theme) -- This is necessary because we modified the default theme table
   o:_applyParameters(p)
   return o
 end

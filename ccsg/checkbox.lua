@@ -9,7 +9,7 @@ local widget = require("ccsg.widget")
 -- @table checkbox
 local checkbox = {
   type = "checkbox", -- string, used for gui packing/unpacking (must match filename without extension!)
-  VERSION = "2.0",
+  VERSION = "3.0",
 }
 -- Setup inheritence
 setmetatable(checkbox, widget)
@@ -18,16 +18,15 @@ checkbox.__index = checkbox
 --- Draw the checkbox widget.
 function checkbox:draw()
   self:clear()
-  self:drawFrame()
   if self.value then
-    self:writeTextToLocalXY(string.char(7), 1, 1)
+    self:writeClickable(string.char(7), 1, 1)
     -- closed checkbox
   else
-    self:writeTextToLocalXY(string.char(186), 1, 1)
+    self:writeClickable(string.char(186), 1, 1)
     -- open checkbox
   end
-  local preppedString = self.text:sub(1, self.size[1] - 3)
-  self:writeTextToLocalXY(preppedString, 2, 1)
+  local preppedString = self.label:sub(1, self.size[1] - 1)
+  self:write(preppedString, 2, 1)
 end
 
 --- Handle mouse_click events.
@@ -62,10 +61,11 @@ end
 -- @tparam string text single line string to display
 -- @tparam[opt] table p
 -- @treturn table checkbox
-function checkbox.new(pos, size, text, p)
-  local o = widget.new(nil, pos, size, p)
+function checkbox.new(p)
+  assert(p.label ~= nil, "Checkbox requires a label")
+  local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, checkbox)
-  o.text = text
+  o.label = p.label
   o:_applyParameters(p)
   return o
 end

@@ -2,7 +2,7 @@
 
 local gui = require("ccsg.gui")
 local popup = {
-  VERSION = "2.0"
+  VERSION = "3.0"
 }
 
 --- Get input from the user

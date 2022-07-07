@@ -11,7 +11,7 @@ local progressbar = {
   fullChar = "\127", -- character to use for full segments
   halfChar = "\149", -- character to use for >half segments
   selectable = false,
-  VERSION = "2.0",
+  VERSION = "3.0",
 }
 -- Setup inheritence
 setmetatable(progressbar, widget)
@@ -20,14 +20,13 @@ progressbar.__index = progressbar
 --- Draw the progressbar widget.
 function progressbar:draw()
   self:clear()
-  self:drawFrame()
   local percentage = self.value / self.maxValue
   local fullCharactersFloat = percentage * (self.size[1]-2)
   local preppedString = string.rep(self.fullChar, math.floor(fullCharactersFloat))
   if (fullCharactersFloat > (math.floor(fullCharactersFloat) + 0.5)) then
     preppedString = preppedString..self.halfChar
   end
-  self:writeTextToLocalXY(preppedString,1,1)
+  self:write(preppedString,1,1)
 end
 
 --- Update value of progressbar
@@ -53,11 +52,12 @@ end
 -- @tparam number maxValue
 -- @tparam[opt] table p
 -- @treturn table progressbar
-function progressbar.new(pos, size, maxValue, p)
-  local o = widget.new(nil, pos, size, p)
+function progressbar.new(p)
+  assert(type(p.maxValue) == "number", "Progressbar requires a maxValue")
+  local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, progressbar)
   o:_applyParameters(p)
-  o.maxValue = maxValue
+  o.maxValue = p.maxValue
   o.value = 0
   return o
 end

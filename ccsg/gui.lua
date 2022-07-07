@@ -9,25 +9,41 @@ local gui = {
   device = term, -- Not implmented, GUIs can currently only be displayed on the terminal
   timeout = nil, -- Nil or number, set to enable timeouts
   autofit = false, -- Boolean, when enabled the gui will be centered in the middle of the terminal. This expects your gui to be anchored at 1,1.
-  VERSION = "2.0",
+  VERSION = "3.0",
+}
+
+gui.theme = {
+  internalFG = colors.white, -- color, text color of widget internals
+  internalBG = colors.blue, -- color, background color of widget internals
+  clickableFG = colors.magenta, -- color, text color of clickable widget region
+  clickableBG = colors.blue, -- color, background color of clickable widget regions
+  BG = colors.blue, -- color, background color of entire screen
+  FG = colors.white, -- color, FG color of entire screen
 }
 
 -- Setup object oriented thing
 gui.__index = gui
+gui.theme.__index = gui.theme
 
 function gui:_draw()
+  self.device.setCursorBlink(false)
   for key, v in pairs(self.widgets) do
     if v.enable then
-      v.device.setVisible(self.disableBuffering)
+      v.window.setVisible(self.disableBuffering)
       v:draw()
-      v.device.setVisible(true)
+      v.window.setVisible(true)
     else
-      v.device.setVisible(false)
+      v.window.setVisible(false)
     end
   end
-  self.widgets[self.focusedWidget].device.setVisible(self.disableBuffering)
-  self.widgets[self.focusedWidget]:draw() -- Double draw call, but whatever
-  self.widgets[self.focusedWidget].device.setVisible(true)
+  local focusedWidget = self.widgets[self.focusedWidget]
+  focusedWidget.window.setVisible(self.disableBuffering)
+  focusedWidget:draw() -- Double draw call, but whatever
+  focusedWidget.window.setVisible(true)
+  local pos = focusedWidget.pos
+  self.device.setTextColor(self.theme.FG)
+  self.device.setCursorPos(pos[1], pos[2])
+  self.device.setCursorBlink(true)
 end
 
 function gui:_isXYonWidget(x, y, widget)
@@ -43,9 +59,9 @@ end
 -- @treturn table event table {os.pullEvent()}
 function gui:read()
   if self.completeRedraw then
-    term.setTextColor(colors.white)
-    term.setBackgroundColor(colors.black)
-    term.clear()
+    self.device.setTextColor(self.theme.FG)
+    self.device.setBackgroundColor(self.theme.BG)
+    self.device.clear()
     self.completeRedraw = false
   end
   self:_draw()
@@ -59,8 +75,8 @@ function gui:read()
   local eventn = false
   if event == "mouse_click" then
     if self.devMode and a == 3 then
-      term.clear()
-      term.setCursorPos(1, 1)
+      self.device.clear()
+      self.device.setCursorPos(1, 1)
       print("The widget focused has")
       print("index", self.focusedWidget)
       print("x", self.widgets[self.focusedWidget].pos[1], "y", self.widgets[self.focusedWidget].pos[2])
@@ -176,13 +192,10 @@ function gui.new(widgets, parameters)
     for key, value in pairs(parameters) do
       o[key] = value
     end
-    if parameters.theme then
-      for key, value in pairs(o.widgets) do
-        value:updateTheme(parameters.theme)
-      end
-    end
   end
-
+  for key, value in pairs(o.widgets) do
+    value:updateTheme(o.theme)
+  end
   if o.autofit then
     o:doAutofit()
   end

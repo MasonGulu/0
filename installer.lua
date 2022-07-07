@@ -11,11 +11,11 @@ local scrollinput={type="scrollinput",enable_events=true,VERSION="2.0"}setmetata
 
  -- available version strings
 local versions = {
-  "latest",
+  -- "latest",
   "v2.0",
 }
 
-local selectedVersion = 2 -- default version index (should be latest version)
+local selectedVersion = 1 -- default version index (should be latest version)
 
  -- [versionstring] table of available modules
 local availableModules = {
@@ -34,13 +34,13 @@ local availableModules = {
     "popup",
     "checkbox",
     "button",
-    "divider",
     "listbox",
     "printoutput",
     "progressbar",
     "scrollinput",
     "text",
     "textinput",
+    "marquee",
   },
 }
 
@@ -66,7 +66,6 @@ local moduleRequirements = {
       "text",
       "textinput",
       "button",
-      "divider",
       "listbox",
       "checkbox",
     }

@@ -96,9 +96,7 @@ end
 -- end
 
 --- Create a new textinput widget
--- @tparam table pos {x,y}
--- @tparam table size {width,height}
--- @tparam[opt] table p
+-- @tparam table p
 -- @treturn table textinput
 function textinput.new(p)
   local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)

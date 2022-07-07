@@ -21,7 +21,7 @@ progressbar.__index = progressbar
 function progressbar:draw()
   self:clear()
   local percentage = self.value / self.maxValue
-  local fullCharactersFloat = percentage * (self.size[1]-2)
+  local fullCharactersFloat = percentage * (self.size[1])
   local preppedString = string.rep(self.fullChar, math.floor(fullCharactersFloat))
   if (fullCharactersFloat > (math.floor(fullCharactersFloat) + 0.5)) then
     preppedString = preppedString..self.halfChar
@@ -40,17 +40,15 @@ end
 -- current value is capped by maxValue
 -- @tparam number maxValue
 -- @tparam[opt] table p
-function progressbar:updateParameters(maxValue, p)
-  self.value = math.min(self.value, maxValue)
-  self.maxValue = maxValue
+function progressbar:updateParameters(p)
+  if p.maxValue then
+    self.value = math.min(self.value, p.maxValue)
+  end
   self:_applyParameters(p)
 end
 
 --- Create a new progressbar widget.
--- @tparam table pos {x,y}
--- @tparam table size {width,height}
--- @tparam number maxValue
--- @tparam[opt] table p
+-- @tparam table p requires maxValue
 -- @treturn table progressbar
 function progressbar.new(p)
   assert(type(p.maxValue) == "number", "Progressbar requires a maxValue")

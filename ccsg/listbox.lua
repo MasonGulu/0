@@ -153,24 +153,26 @@ end
 --- Update table and parameters
 -- @tparam table T table of selections
 -- @tparam[opt] table p
-function listbox:updateParameters(T, p)
-  if #T < #self.options then
-    -- list is smaller
-    self.value = {}
-    self._scrollOffset = 0
-    self._selectedOrder = {}
-    self._selectedAmount = 0
+function listbox:updateParameters(p)
+  if p.options then
+    if #p.options < #self.options then
+      -- list is smaller
+      self.value = {}
+      self._scrollOffset = 0
+      self._selectedOrder = {}
+      self._selectedAmount = 0
+    end
+    self.options = p.options
+    self._scrollOffset = math.max(math.min(self._scrollOffset, #self.options-1),0)
+    local i = 1
+    while (self._selectedAmount < self.minSelected) do
+      self.value[i] = true
+      self._selectedOrder[#self._selectedOrder + 1] = i
+      self._selectedAmount = self._selectedAmount + 1
+      i = i + 1
+    end
   end
-  self.options = T
   self:_applyParameters(p)
-  self._scrollOffset = math.max(math.min(self._scrollOffset, #self.options-1),0)
-  local i = 1
-  while (self._selectedAmount < self.minSelected) do
-    self.value[i] = true
-    self._selectedOrder[#self._selectedOrder + 1] = i
-    self._selectedAmount = self._selectedAmount + 1
-    i = i + 1
-  end
 end
 
 --- Get listbox's value
@@ -188,10 +190,7 @@ function listbox:getValue()
 end
 
 --- Create a new divider widget.
--- @tparam table pos {x,y}
--- @tparam table size {width,height}
--- @tparam table T table of selections
--- @tparam[opt] table p
+-- @tparam table p requires options
 -- @treturn table divider
 function listbox.new(p)
   -- takes an ordered table of string displayable objects, value is the index of the selected element
@@ -199,10 +198,9 @@ function listbox.new(p)
   assert(p.options ~= nil, "Listbox requires options")
   local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, listbox)
-  o.options = p.options
   o.value = {}
   o._selectedOrder = {} -- start -> end = oldest -> newest selected
-  o.textWidth = o.size[2] - 3
+  o.textWidth = o.size[2] - 1
   o:_applyParameters(p)
   local i = 1
   while (o._selectedAmount < o.minSelected) do

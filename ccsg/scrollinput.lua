@@ -93,18 +93,16 @@ end
 --- Update parameters of this scrollinput widget
 -- @tparam table options
 -- @tparam[opt] table p
-function scrollinput:updateParameters(options, p)
-  self.value = 1
-  self.options = options
-  self.length = #self.options
+function scrollinput:updateParameters(p)
+  if p.options then
+    self.value = 1
+  end
   self:_applyParameters(p)
+  self.length = #self.options
 end
 
 --- Create a new scrollinput widget.
--- @tparam table pos {x,y}
--- @tparam table size {width,height}
--- @tparam table options
--- @tparam[opt] table p
+-- @tparam table p requires options
 -- @treturn table scrollinput object
 function scrollinput.new(p)
   p.options = p.options or p[3]
@@ -112,9 +110,8 @@ function scrollinput.new(p)
   local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, scrollinput)
   o.value = 1
-  o.options = p.options
-  o.length = #o.options
   o:_applyParameters(p)
+  o.length = #o.options
   return o
 end
 

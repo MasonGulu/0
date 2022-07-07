@@ -15,11 +15,11 @@ local widget = {
   enable_events = false, -- bool, if this widget should throw events
   device = term.current(), -- Device the widget is displayed on, not implemented currently. do not change.
   enable = true, -- bool, render and process events
-  frame = true, -- bool, draw frame around widget
   selectable = true, -- bool, should this object be selectable?
   theme = {}, -- table, theme information
   type = "widget", -- string, name of file / widget type
   VERSION = "3.0",
+  render = true, -- bool, call draw() on the next frame
 }
 
 widget.theme = {}

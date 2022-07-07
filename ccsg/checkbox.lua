@@ -56,16 +56,12 @@ function checkbox:handleKey(keycode, held)
 end
 
 --- Create a new checkbox widget.
--- @tparam table pos {x,y}
--- @tparam table size {width,height}
--- @tparam string text single line string to display
--- @tparam[opt] table p
+-- @tparam table p requires label
 -- @treturn table checkbox
 function checkbox.new(p)
   assert(p.label ~= nil, "Checkbox requires a label")
   local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, checkbox)
-  o.label = p.label
   o:_applyParameters(p)
   return o
 end

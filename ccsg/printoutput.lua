@@ -68,14 +68,11 @@ function printoutput:print(...)
 end
 
 --- Create a new printoutput widget.
--- @tparam table pos {x,y}
--- @tparam table size {width,height}
--- @tparam[opt] table p
+-- @tparam table p
 -- @treturn table printoutput
 function printoutput.new(p)
   local o = widget.new(nil, p[1] or p.pos, p[2] or p.size, p)
   setmetatable(o, printoutput)
-  o.value = {}
   o.selectable = false
   o:_applyParameters(p)
   return o

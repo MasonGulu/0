@@ -23,6 +23,7 @@ function text:draw()
     local preppedString = self.value[i]:sub(1, self.size[1] - 2)
     self:write(preppedString, 1, self.textArea[2] + 1 - i)
   end
+  self.render = false
 end
 
 
@@ -64,10 +65,7 @@ function text:updateParameters(string, p)
 end
 
 --- Create a new text widget.
--- @tparam table pos {x,y}
--- @tparam table size {width,height}
--- @tparam string string
--- @tparam[opt] table p
+-- @tparam table p requires label
 -- @treturn table text object
 function text.new(p)
   p.label = p.label or p[3]

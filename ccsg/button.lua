@@ -47,29 +47,8 @@ function button:handleKey(keycode, held)
   return false
 end
 
---- Update string or parameters
--- @tparam string string single line string to display
--- @tparam[opt] table p
-function button:updateParameters(string, p)
-  self.value = string
-  self:_applyParameters(p)
-end
-
---- Function called when updating the GUI theme
--- @tparam table theme
-function button:updateTheme(theme)
-  setmetatable(theme, widget.theme)
-  local invertTheme = {internalInvert = true} -- this is required to ensure the internal colors of the button are inverted without modifying the table passed in
-  theme.__index = theme -- (beyond adding an __index index)
-  setmetatable(invertTheme, theme)
-  self.theme = invertTheme
-end
-
 --- Create a new button widget.
--- @tparam table pos {x,y}
--- @tparam table size {width,height}
--- @tparam string string single line string to display
--- @tparam[opt] table p
+-- @tparam table p requires label
 -- @treturn table button
 function button.new(p)
   -- expects a label

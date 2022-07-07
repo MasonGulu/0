@@ -18,14 +18,11 @@ function popup.getInput(message, width)
   local text = require("ccsg.text")
   local textinput = require("ccsg.textinput")
   local button = require("ccsg.button")
-  local divider = require("ccsg.divider")
   local win = gui.new({
-    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
-    text.new({ 1, 2 }, { width, 1 }, message),
-    input = textinput.new({ 1, 3 }, { width, 1 }),
-    cancelButton = button.new({ 1, 4 }, { math.floor(width / 2), 1 }, "Cancel"),
-    submitButton = button.new({ 1 + math.ceil(width / 2), 4 }, { math.floor(width / 2), 1 }, "Submit"),
-    divider.new({ 1, 5 }, { width, 1 }, { bottom = true })
+    text.new{{ 1, 2 }, { width, 1 }, label = message},
+    input = textinput.new{{ 1, 3 }, { width, 1 }},
+    cancelButton = button.new{{ 1, 4 }, { math.floor(width / 2), 1 }, label = "Cancel"},
+    submitButton = button.new{{ 1 + math.ceil(width / 2), 4 }, { math.floor(width / 2), 1 }, label = "Submit"}
   }, {autofit=true})
   while true do
     local event, values = win:read()
@@ -51,20 +48,17 @@ function popup.pickFromList(message, list, width)
   local text = require("ccsg.text")
   local listbox = require("ccsg.listbox")
   local button = require("ccsg.button")
-  local divider = require("ccsg.divider")
 
   width = width or 20
 
   local buttonWidth = math.floor(width / 2)
 
   local win = gui.new({
-    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
-    text.new({ 1, 2 }, { width, 2 }, message),
-    listbox = listbox.new({ 1, 4 }, { width, 5 }, list),
-    text.new({ 1, 9 }, { width, 1 }, ""),
-    cancelButton = button.new({ 1, 10 }, { buttonWidth, 1 }, "Cancel"),
-    submitButton = button.new({ buttonWidth + 1, 10 }, { buttonWidth, 1 }, "Submit"),
-    divider.new({ 1, 11 }, { width, 1 }, { bottom = true })
+    text.new{{ 1, 2 }, { width, 2 }, label = message},
+    listbox = listbox.new{{ 1, 4 }, { width, 5 }, options = list},
+    text.new{{ 1, 9 }, { width, 1 }, label= ""},
+    cancelButton = button.new{{ 1, 10 }, { buttonWidth, 1 }, label="Cancel"},
+    submitButton = button.new{{ buttonWidth + 1, 10 }, { buttonWidth, 1 }, label="Submit"},
   }, { autofit = true })
   while true do
     local winEvent, values = win:read()
@@ -132,27 +126,21 @@ function popup.fileBrowse(fileExtension, write, width, height)
   local text = require("ccsg.text")
   local button = require("ccsg.button")
   local listbox = require("ccsg.listbox")
-  local divider = require("ccsg.divider")
   local textinput = require("ccsg.textinput")
 
   local widgets = {
-    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
-    directoryLabel = text.new({ 1, 2 }, { width - 9, 1 }, "/"),
-    directoryAddButton = button.new({ width - 8, 2 }, { 9, 1 }, "New Dir"),
-    divider.new({ 1, 3 }, { width, 1 }),
-    directoryListbox = listbox.new({ 1, 4 }, { width, height }, { "example" }),
-    divider.new({ 1, height + 4 }, { width, 1 }),
-    divider.new({ 1, height + 6 }, { width, 1 }),
-    cancelButton = button.new({ 1, height + 7 }, { buttonWidth + 1, 1 }, "Cancel"),
-    selectButton = button.new({ buttonWidth + 2, height + 7 }, { buttonWidth, 1 }, "Submit"),
-    divider.new({ 1, 1 + height + 7 }, { width, 1 }, { bottom = true })
+    directoryLabel = text.new{{ 1, 2 }, { width - 9, 1 }, label="/"},
+    directoryAddButton = button.new{{ width - 8, 2 }, { 9, 1 }, label="New Dir"},
+    directoryListbox = listbox.new{{ 1, 4 }, { width, height }, options={ "example" }},
+    cancelButton = button.new{{ 1, height + 7 }, { buttonWidth + 1, 1 }, label="Cancel"},
+    selectButton = button.new{{ buttonWidth + 2, height + 7 }, { buttonWidth, 1 }, label="Submit"},
   }
   
   if fileExtension then
-    widgets.filenameInput = textinput.new({ 1, height + 5 }, { width - 6, 1 })
-    widgets[#widgets+1] = text.new({ 1 + width - 6, height + 5 }, { 6, 1 }, fileExtension)
+    widgets.filenameInput = textinput.new{{ 1, height + 5 }, { width - 6, 1 }}
+    widgets[#widgets+1] = text.new{{ 1 + width - 6, height + 5 }, { 6, 1 }, label=fileExtension}
   else
-    widgets.filenameInput = textinput.new({ 1, height + 5 }, { width, 1 })
+    widgets.filenameInput = textinput.new{{ 1, height + 5 }, { width, 1 }}
   end
   local win = gui.new(widgets, {autofit=true})
 
@@ -164,8 +152,8 @@ function popup.fileBrowse(fileExtension, write, width, height)
   while true do
     if dirChanged then
       dirList, fileList = getFoldersAndFiles(currentDir, fileExtension)
-      win.widgets.directoryListbox:updateParameters(tableConcat(dirList, fileList))
-      win.widgets.directoryLabel:updateParameters(currentDir)
+      win.widgets.directoryListbox:updateParameters{options = tableConcat(dirList, fileList)}
+      win.widgets.directoryLabel:updateParameters{label=currentDir}
       dirChanged = false
     end
     local event, values = win:read()
@@ -184,7 +172,7 @@ function popup.fileBrowse(fileExtension, write, width, height)
       local returnFilename
       if fileExtension then
         returnFilename = currentDir .. values.filenameInput
-        if (returnFilename:sub(-fileExtension:len(), -1) ~= fileExtension) then
+        if (returnFilename:sub(-math.floor(fileExtension:len()), -1) ~= fileExtension) then
           returnFilename = returnFilename..fileExtension
         end
       else
@@ -225,13 +213,10 @@ function popup.info(message, buttonLabel, width, height)
   height = height or 3
   local text = require("ccsg.text")
   local button = require("ccsg.button")
-  local divider = require("ccsg.divider")
   buttonLabel = buttonLabel or "Close"
   local win = gui.new({
-    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
-    text.new({ 1, 2 }, { width, height }, message),
-    ackButton = button.new({ 1, 2 + height }, { width, 1 }, buttonLabel),
-    divider.new({ 1, 3 + height }, { width, 1 }, { bottom = true })
+    text.new{{ 1, 2 }, { width, height }, label=message},
+    ackButton = button.new{{ 1, 2 + height }, { width, 1 },label= buttonLabel},
   },{autofit=true})
   local event, values
   repeat
@@ -253,13 +238,10 @@ function popup.confirm(message, height, width)
   local buttonWidth = math.floor(width / 2)
   local text = require("ccsg.text")
   local button = require("ccsg.button")
-  local divider = require("ccsg.divider")
   local win = gui.new({
-    divider.new({ 1, 1 }, { width, 1 }, { top = true }),
-    text.new({ 1, 2 }, { width, height }, message),
-    noButton = button.new({ 1, 2 + height }, { buttonWidth, 1 }, "No"),
-    yesButton = button.new({ 1 + buttonWidth + 1, 2 + height }, { buttonWidth, 1 }, "Yes"),
-    divider.new({ 1, 3 + height }, { width, 1 }, { bottom = true })
+    text.new{{ 1, 2 }, { width, height }, message},
+    noButton = button.new{{ 1, 2 + height }, { buttonWidth, 1 }, "No"},
+    yesButton = button.new{{ 1 + buttonWidth + 1, 2 + height }, { buttonWidth, 1 }, "Yes"},
   }, {autofit=true})
   local event, values
   repeat
@@ -286,34 +268,29 @@ function popup.editT(T, textString, textHeight, keyWidth, valueWidth)
 
   local text = require("ccsg.text")
   local button = require("ccsg.button")
-  local divider = require("ccsg.divider")
   local textinput = require("ccsg.textinput")
   local checkbox = require("ccsg.checkbox")
 
   local widgets = {
-    DIV1 = divider.new({ 1, 1 }, { width, 1 }, { top = true }),
-    TXT1 = text.new({ 1, 2 }, { width, textHeight }, textString),
-    DIV2 = divider.new({ 1, textHeight + 2 }, { width, 1 })
+    TXT1 = text.new{{ 1, 2 }, { width, textHeight }, label=textString}
   }
   local offset = textHeight + 2 -- offset from ypos
   for key, value in pairs(T) do
     if keyWidth > 0 then
-      widgets["DIV" .. tostring(offset)] = text.new({ 1, 1 + offset }, { keyWidth, 1 }, key)
+      widgets["DIV" .. tostring(offset)] = text.new{{ 1, 1 + offset }, { keyWidth, 1 }, label=key}
     end
     if type(value) == "boolean" then
-      widgets[key] = checkbox.new({ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, tostring(key), { value = value })
+      widgets[key] = checkbox.new{{ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, label= tostring(key), value = value}
     elseif type(value) == "number" then
-      widgets[key] = textinput.new({ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, { numOnly = true, value = value })
+      widgets[key] = textinput.new{{ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, numOnly = true, value = value }
     elseif type(value) == "table" then
-      widgets[key] = button.new({ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, "TABLE")
+      widgets[key] = button.new{{ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, label="TABLE"}
     elseif type(value) == "string" then
-      widgets[key] = textinput.new({ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, { value = value })
+      widgets[key] = textinput.new{{ 1 + keyWidth, 1 + offset }, { valueWidth, 1 }, value = value }
     end
     offset = offset + 1
   end
-  widgets.DIV3 = divider.new({ 1, 1 + offset }, { width, 1 })
-  widgets.ackButton = button.new({ 1, offset + 2 }, { width, 1 }, "Submit")
-  widgets.DIV4 = divider.new({ 1, offset + 3 }, { width, 1 }, { bottom = true })
+  widgets.ackButton = button.new{{ 1, offset + 2 }, { width, 1 },label= "Submit"}
   local win = gui.new(widgets, { autofit=true})
   local event, values
   repeat

@@ -12,27 +12,40 @@ local gui = {
   VERSION = "3.0",
 }
 
-gui.theme = {
+gui.themes = {bios = {
   internalFG = colors.white, -- color, text color of widget internals
   internalBG = colors.blue, -- color, background color of widget internals
   clickableFG = colors.magenta, -- color, text color of clickable widget region
   clickableBG = colors.blue, -- color, background color of clickable widget regions
   BG = colors.blue, -- color, background color of entire screen
   FG = colors.white, -- color, FG color of entire screen
+}}
+gui.themes.bios.__index = gui.themes.bios
+
+gui.themes.default = {
+  internalFG = colors.white, -- color, text color of widget internals
+  internalBG = colors.black, -- color, background color of widget internals
+  clickableFG = colors.white, -- color, text color of clickable widget region
+  clickableBG = colors.gray, -- color, background color of clickable widget regions
+  BG = colors.black, -- color, background color of entire screen
+  FG = colors.white, -- color, FG color of entire screen
 }
+gui.themes.default.__index = gui.themes.default
+
+gui.theme = gui.themes.default
 
 -- Setup object oriented thing
 gui.__index = gui
-gui.theme.__index = gui.theme
 
-function gui:_draw()
+
+function gui:_draw(completeRedraw)
   self.device.setCursorBlink(false)
   for key, v in pairs(self.widgets) do
-    if v.enable then
+    if v.enable and (v.render or completeRedraw) then
       v.window.setVisible(self.disableBuffering)
       v:draw()
       v.window.setVisible(true)
-    else
+    elseif not v.enable then
       v.window.setVisible(false)
     end
   end
@@ -191,6 +204,10 @@ function gui.new(widgets, parameters)
   if type(parameters) == "table" then
     for key, value in pairs(parameters) do
       o[key] = value
+      if key == "theme" then
+        o.theme.__index = o.theme
+        setmetatable(o.theme, gui.theme) -- Ensure that the theme inherits from the default
+      end
     end
   end
   for key, value in pairs(o.widgets) do

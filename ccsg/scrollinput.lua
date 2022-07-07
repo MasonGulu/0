@@ -54,7 +54,6 @@ end
 -- @tparam int mouseY global Y
 -- @treturn bool value has changed and enable_events
 function scrollinput:handleMouseScroll(direction, mouseX, mouseY)
-  print("hhhhhhh") sleep(3)
   if direction == 1 then
     self.value = self.value + 1
     if self.value > self.length then

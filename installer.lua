@@ -15,7 +15,7 @@ local versions = {
   "v2.0",
 }
 
-local selectedVersion = 1 -- default version index (should be latest version)
+local selectedVersion = 2 -- default version index (should be latest version)
 
  -- [versionstring] table of available modules
 local availableModules = {
